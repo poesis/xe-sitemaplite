@@ -35,6 +35,12 @@ class SitemapLiteAdminView extends SitemapLite
 			$config->ping_search_engines = array();
 		}
 		
+		// Initialize the additional URL list.
+		if (!isset($config->additional_urls))
+		{
+			$config->additional_urls = array();
+		}
+		
 		Context::set('sitemaplite_config', $config);
 		Context::set('sitemaplite_url_root', $this->getSitemapXmlUrl('root'));
 		Context::set('sitemaplite_path_root', $this->getSitemapXmlPath('root'));

@@ -25,6 +25,17 @@ class SitemapLiteAdminController extends SitemapLite
 		$ping_search_engines = $vars->sitemaplite_ping_search_engines;
 		$config->ping_search_engines = is_array($ping_search_engines) ? $ping_search_engines : array();
 		
+		$config->additional_urls = array();
+		$additional_urls = explode("\n", $vars->sitemaplite_additional_urls);
+		foreach ($additional_urls as $additional_url)
+		{
+			$additional_url = trim($additional_url);
+			if ($additional_url)
+			{
+				$config->additional_urls[] = $additional_url;
+			}
+		}
+		
 		$oModuleController = getController('module');
 		$output = $oModuleController->insertModuleConfig('sitemaplite', $config);
 		
@@ -120,6 +131,15 @@ class SitemapLiteAdminController extends SitemapLite
 				{
 					$urls[] = $url;
 				}
+			}
+		}
+		
+		// Register additional URLs
+		if ($config->additional_urls)
+		{
+			foreach ($config->additional_urls as $url)
+			{
+				$urls[] = $url;
 			}
 		}
 		

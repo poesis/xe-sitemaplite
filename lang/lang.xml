@@ -44,4 +44,12 @@
 		<value xml:lang="ko"><![CDATA[선택한 검색 엔진에 사이트맵을 자동 제출합니다. 네이버는 직접 제출하셔야 합니다.]]></value>
 		<value xml:lang="en"><![CDATA[The selected search engines will be automatically notified whenever the sitemap changes.]]></value>
 	</item>
+	<item name="cmd_sitemaplite_additional_urls">
+		<value xml:lang="ko"><![CDATA[추가로 등록할 주소]]></value>
+		<value xml:lang="en"><![CDATA[Additional URLs]]></value>
+	</item>
+	<item name="cmd_sitemaplite_about_additional_urls">
+		<value xml:lang="ko"><![CDATA[메뉴에 포함된 주소 외에 추가로 등록할 주소가 있다면 한 줄에 하나씩 입력하여 주십시오.]]></value>
+		<value xml:lang="en"><![CDATA[If you have any other addresses to add, please write them one in each line.]]></value>
+	</item>
 </lang>
