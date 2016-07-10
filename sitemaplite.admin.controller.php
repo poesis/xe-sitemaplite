@@ -88,7 +88,7 @@ class SitemapLiteAdminController extends SitemapLite
 				
 				if (preg_match('@^(https?:)?//.+@', $item->url))
 				{
-					if ($this->_isInternalUrl($item->url))
+					if ($this->_isInternalUrl($item->url) && ($item->url . '/' !== $baseurl))
 					{
 						$url = $item->url;
 					}
