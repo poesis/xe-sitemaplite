@@ -17,7 +17,7 @@ class SitemapLiteAdminView extends SitemapLite
 		$config = $this->getConfig();
 		
 		// Automatically select the index menu if running this module for the first time.
-		$index_menu_srl = $this->getIndexMenuSrl();
+		$index_menu_srl = $this->_getIndexMenuSrl();
 		if (!isset($config->menu_srls) || !is_array($config->menu_srls))
 		{
 			$config->menu_srls = array($index_menu_srl);
@@ -59,7 +59,7 @@ class SitemapLiteAdminView extends SitemapLite
 	/**
 	 * Get menu_srl of index module
 	 */
-	protected function getIndexMenuSrl()
+	protected function _getIndexMenuSrl()
 	{
 		$start_module = getModel('module')->getSiteInfo(0);
 		$output = executeQuery('menu.getMenuItemByUrl', (object)array(
