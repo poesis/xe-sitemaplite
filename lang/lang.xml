@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<lang>
+	<item name="cmd_sitemaplite">
+		<value xml:lang="ko"><![CDATA[사이트맵 Lite]]></value>
+		<value xml:lang="en"><![CDATA[Sitemap Lite]]></value>
+	</item>
+	<item name="cmd_sitemaplite_path">
+		<value xml:lang="ko"><![CDATA[사이트맵 파일 경로]]></value>
+		<value xml:lang="en"><![CDATA[Sitemap File Path]]></value>
+	</item>
+	<item name="cmd_sitemaplite_about_path">
+		<value xml:lang="ko"><![CDATA[서브디렉토리에 XE를 설치한 경우 사이트맵 파일을 루트 디렉토리에 생성하도록 선택할 수 있습니다.]]></value>
+		<value xml:lang="en"><![CDATA[You can choose to put the sitemap in the root path if you installed XE in a subdirectory.]]></value>
+	</item>
+	<item name="cmd_sitemaplite_not_writable">
+		<value xml:lang="ko"><![CDATA[쓰기 권한 없음]]></value>
+		<value xml:lang="en"><![CDATA[Not Writable]]></value>
+	</item>
+	<item name="msg_sitemaplite_path_not_writable">
+		<value xml:lang="ko"><![CDATA[사이트맵 파일 경로에 쓰기 권한이 없습니다. sitemap.xml 파일의 퍼미션을 666 또는 777로 변경해 주십시오.<br>sitemap.xml 파일이 존재하지 않는 경우, 상위 폴더의 퍼미션을 777로 변경하시면 됩니다.]]></value>
+		<value xml:lang="en"><![CDATA[The sitemap file path is not writable. Please change the permissions on sitemap.xml to 666 or 777.<br>If the sitemap.xml file does not exist, please change the permissions on its parent directory to 777.]]></value>
+	</item>
+	<item name="msg_sitemaplite_failed_to_write_xml_file">
+		<value xml:lang="ko"><![CDATA[sitemap.xml 파일을 기록할 수 없습니다. 퍼미션을 확인해 주십시오.]]></value>
+		<value xml:lang="en"><![CDATA[Cannot update sitemap.xml file. Please check permissions.]]></value>
+	</item>
+	<item name="cmd_sitemaplite_menu_srls">
+		<value xml:lang="ko"><![CDATA[메뉴 선택]]></value>
+		<value xml:lang="en"><![CDATA[Select Menus]]></value>
+	</item>
+	<item name="cmd_sitemaplite_about_menu_srls">
+		<value xml:lang="ko"><![CDATA[선택한 메뉴의 내용이 sitemap.xml 파일에 포함됩니다.]]></value>
+		<value xml:lang="en"><![CDATA[The selected menus will be included in the sitemap.xml file.]]></value>
+	</item>
+</lang>

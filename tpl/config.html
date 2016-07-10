@@ -1,0 +1,63 @@
+<load target="css/sitemaplite.css" />
+<load target="js/sitemaplite.js" />
+
+<div class="x_page-header">
+	<h1>{$lang->cmd_sitemaplite}</h1>
+</div>
+
+<form class="x_form-horizontal" action="./" method="post" id="sitemaplite_config">
+	<input type="hidden" name="module" value="sitemaplite" />
+	<input type="hidden" name="act" value="procSitemapliteAdminInsertConfig" />
+	<input type="hidden" name="success_return_url" value="{getRequestUriByServerEnviroment()}" />
+	
+	<div cond="$XE_VALIDATOR_MESSAGE" class="message {$XE_VALIDATOR_MESSAGE_TYPE}">
+		<p>{$XE_VALIDATOR_MESSAGE}</p>
+	</div>
+	
+	<div class="message error" cond="$sitemaplite_config->sitemap_file_path === 'root' && !$sitemaplite_path_root_writable">
+		<p>{$lang->msg_sitemaplite_path_not_writable}</p>
+	</div>
+	
+	<div class="message error" cond="$sitemaplite_config->sitemap_file_path === 'sub' && !$sitemaplite_path_sub_writable">
+		<p>{$lang->msg_sitemaplite_path_not_writable}</p>
+	</div>
+	
+	<section class="section">
+
+		<div class="x_control-group">
+			<label class="x_control-label">{$lang->cmd_sitemaplite_path}</label>
+			<div class="x_controls">
+				<label>
+					<input name="sitemaplite_file_path" type="radio" value="root" checked="checked"|cond="$sitemaplite_config->sitemap_file_path === 'root'" />
+					{htmlspecialchars($sitemaplite_url_root)}
+					<span class="not_writable" cond="!$sitemaplite_path_root_writable">({$lang->cmd_sitemaplite_not_writable})</span>
+				</label>
+				<label cond="$sitemaplite_path_root !== $sitemaplite_path_sub">
+					<input name="sitemaplite_file_path" type="radio" value="sub" checked="checked"|cond="$sitemaplite_config->sitemap_file_path === 'sub'" />
+					{htmlspecialchars($sitemaplite_url_sub)}
+					<span class="not_writable" cond="!$sitemaplite_path_sub_writable">({$lang->cmd_sitemaplite_not_writable})</span>
+				</label>
+				<p class="x_help-block">{$lang->cmd_sitemaplite_about_path}</p>
+			</div>
+		</div>
+	
+		<div class="x_control-group">
+			<label class="x_control-label">{$lang->cmd_sitemaplite_menu_srls}</label>
+			<div class="x_controls">
+				<!--@foreach($sitemaplite_menus as $sitemaplite_menu)-->
+					<label class="x_inline">
+						<input name="sitemaplite_menu_srls[]" type="checkbox" value="{$sitemaplite_menu->menu_srl}" checked="checked"|cond="in_array($sitemaplite_menu->menu_srl, $sitemaplite_config->menu_srls)" />
+						{$sitemaplite_menu->title}
+					</label>
+				<!--@end-->
+				<p class="x_help-block">{$lang->cmd_sitemaplite_about_menu_srls}</p>
+			</div>
+		</div>
+	
+	</section>
+	
+	<div class="btnArea x_clearfix">
+		<button type="submit" class="x_btn x_btn-primary x_pull-right">{$lang->cmd_registration}</button>
+	</div>
+	
+</form>

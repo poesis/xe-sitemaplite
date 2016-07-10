@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<module>
+	<grants />
+	<permissions />
+	<actions>
+		<action name="dispSitemapliteAdminConfig" type="view" admin_index="true" menu_name="sitemaplite" />
+		<action name="procSitemapliteAdminInsertConfig" type="controller" />
+	</actions>
+	<menus>
+		<menu name="sitemaplite" type="all">
+			<title xml:lang="ko">사이트맵 Lite</title>
+			<title xml:lang="en">Sitemap Lite</title>
+		</menu>
+	</menus>
+</module>
