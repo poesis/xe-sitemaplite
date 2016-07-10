@@ -54,6 +54,21 @@
 			</div>
 		</div>
 	
+		<div class="x_control-group">
+			<label class="x_control-label">{$lang->cmd_sitemaplite_ping_search_engines}</label>
+			<div class="x_controls">
+				<label class="x_inline">
+					<input name="sitemaplite_ping_search_engines[]" type="checkbox" value="google" checked="checked"|cond="in_array('google', $sitemaplite_config->ping_search_engines)" />
+					Google
+				</label>
+				<label class="x_inline">
+					<input name="sitemaplite_ping_search_engines[]" type="checkbox" value="bing" checked="checked"|cond="in_array('bing', $sitemaplite_config->ping_search_engines)" />
+					Bing
+				</label>
+				<p class="x_help-block">{$lang->cmd_sitemaplite_about_ping_search_engines}</p>
+			</div>
+		</div>
+	
 	</section>
 	
 	<div class="btnArea x_clearfix">

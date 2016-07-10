@@ -22,12 +22,15 @@ class SitemapLiteAdminController extends SitemapLite
 		$file_path = $vars->sitemaplite_file_path;
 		$config->sitemap_file_path = ($file_path === 'root') ? 'root' : 'sub';
 		
+		$ping_search_engines = $vars->sitemaplite_ping_search_engines;
+		$config->ping_search_engines = is_array($ping_search_engines) ? $ping_search_engines : array();
+		
 		$oModuleController = getController('module');
 		$output = $oModuleController->insertModuleConfig('sitemaplite', $config);
 		
 		if ($output->toBool())
 		{
-			$write_success = $this->writeSitemapXml();
+			$write_success = $this->writeSitemapXml($config);
 			if ($write_success)
 			{
 				$this->setMessage('success_registed');
@@ -131,6 +134,13 @@ class SitemapLiteAdminController extends SitemapLite
 		}
 		$xml .= '</urlset>' . PHP_EOL;
 		FileHandler::writeFile($xml_path, $xml);
+		
+		// Ping search engines
+		if ($config->ping_search_engines)
+		{
+			$xml_url = $this->getSitemapXmlUrl($config->sitemap_file_path);
+			$this->_pingSearchEngines($xml_url, $config->ping_search_engines);
+		}
 		return true;
 	}
 	
@@ -154,5 +164,34 @@ class SitemapLiteAdminController extends SitemapLite
 			$regexp = '@^(https?:)?//' . preg_quote($dui['host'], '@') . '(:[0-9]+)?(/.*)?@';
 		}
 		return preg_match($regexp, $url) ? true : false;
+	}
+	
+	/**
+	 * Ping search engines
+	 */
+	protected function _pingSearchEngines($url, $search_engines = array())
+	{
+		$pings = array(
+			'google' => 'http://www.google.com/webmasters/sitemaps/ping?sitemap=%s',
+			'bing' => 'http://www.bing.com/ping?sitemap=%s',
+		);
+		
+		$config = array('ssl_verify_host' => false);
+		if (extension_loaded('curl'))
+		{
+			$config['adapter'] = 'curl';
+		}
+		
+		if ($search_engines)
+		{
+			foreach ($search_engines as $search_engine)
+			{
+				if (isset($pings[$search_engine]))
+				{
+					$ping_url = sprintf($pings[$search_engine], urlencode($url));
+					FileHandler::getRemoteResource($ping_url, null, 3, 'GET', null, array(), array(), array(), $config);
+				}
+			}
+		}
 	}
 }

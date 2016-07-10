@@ -25,11 +25,19 @@
 		<value xml:lang="en"><![CDATA[Cannot update sitemap.xml file. Please check permissions.]]></value>
 	</item>
 	<item name="cmd_sitemaplite_menu_srls">
-		<value xml:lang="ko"><![CDATA[메뉴 선택]]></value>
+		<value xml:lang="ko"><![CDATA[사이트맵 메뉴 선택]]></value>
 		<value xml:lang="en"><![CDATA[Select Menus]]></value>
 	</item>
 	<item name="cmd_sitemaplite_about_menu_srls">
-		<value xml:lang="ko"><![CDATA[선택한 메뉴의 내용이 sitemap.xml 파일에 포함됩니다.]]></value>
-		<value xml:lang="en"><![CDATA[The selected menus will be included in the sitemap.xml file.]]></value>
+		<value xml:lang="ko"><![CDATA[선택한 메뉴의 내용이 sitemap.xml 파일에 포함됩니다. 외부 링크는 제외됩니다.]]></value>
+		<value xml:lang="en"><![CDATA[The selected menus will be included in the sitemap.xml file. External links will be excluded.]]></value>
+	</item>
+	<item name="cmd_sitemaplite_ping_search_engines">
+		<value xml:lang="ko"><![CDATA[검색엔진 자동 제출]]></value>
+		<value xml:lang="en"><![CDATA[Ping Search Engines]]></value>
+	</item>
+	<item name="cmd_sitemaplite_about_ping_search_engines">
+		<value xml:lang="ko"><![CDATA[선택한 검색 엔진에 사이트맵을 자동 제출합니다. 네이버는 직접 제출하셔야 합니다.]]></value>
+		<value xml:lang="en"><![CDATA[The selected search engines will be automatically notified whenever the sitemap changes.]]></value>
 	</item>
 </lang>
