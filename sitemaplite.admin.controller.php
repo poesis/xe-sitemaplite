@@ -143,8 +143,9 @@ class SitemapLiteAdminController extends SitemapLite
 			}
 		}
 		
-		// Remove duplicate URLs
+		// Remove duplicate URLs and admin URLs
 		$urls = array_unique($urls);
+		$urls = array_filter($urls, array($this, _isNotAdminUrl));
 		
 		// Write XML
 		$xml = '<' . '?xml version="1.0"?>' . PHP_EOL . '<urlset>' . PHP_EOL;
@@ -184,6 +185,21 @@ class SitemapLiteAdminController extends SitemapLite
 			$regexp = '@^(https?:)?//' . preg_quote($dui['host'], '@') . '(:[0-9]+)?(/.*)?@';
 		}
 		return preg_match($regexp, $url) ? true : false;
+	}
+	
+	/**
+	 * Check whether a URL is not an admin URL
+	 */
+	protected function _isNotAdminUrl($url)
+	{
+		if (preg_match('@\b(?:admin|module=admin)\b@i', $url))
+		{
+			return false;
+		}
+		else
+		{
+			return true;
+		}
 	}
 	
 	/**
