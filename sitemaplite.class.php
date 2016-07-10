@@ -128,6 +128,6 @@ class SitemapLite extends ModuleObject
 	
 	public function recompileCache()
 	{
-		// no-op
+		getAdminController('sitemaplite')->writeSitemapXml();
 	}
 }
