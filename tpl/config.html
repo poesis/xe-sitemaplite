@@ -76,7 +76,7 @@
 		<div class="x_control-group">
 			<label class="x_control-label" for="sitemaplite_additional_urls">{$lang->cmd_sitemaplite_additional_urls}</label>
 			<div class="x_controls">
-				<textarea class="additional_urls" name="sitemaplite_additional_urls" id="sitemaplite_additional_urls" rows="16">{htmlspecialchars(implode("\n", $sitemaplite_config->additional_urls))}</textarea>
+				<textarea class="additional_urls" name="sitemaplite_additional_urls" id="sitemaplite_additional_urls" rows="{min(16, count($sitemaplite_config->additional_urls) + 2)}">{htmlspecialchars(implode("\n", $sitemaplite_config->additional_urls))}</textarea>
 				<p class="x_help-block">{$lang->cmd_sitemaplite_about_additional_urls}</p>
 			</div>
 		</div>
