@@ -1,2 +1,3 @@
-span.not_writable { color: red; display: inline-block; margin-left: 4px; }
+span.not_writable { color: red; display: inline-block; margin: 0 16px 0 -12px; }
+a.preview_xml { display: inline-block; margin-left: -12px; }
 p.x_help-block { margin-top: 6px !important; margin-bottom: 2px !important; }

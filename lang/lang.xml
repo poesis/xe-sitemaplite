@@ -12,6 +12,10 @@
 		<value xml:lang="ko"><![CDATA[서브디렉토리에 XE를 설치한 경우 사이트맵 파일을 루트 디렉토리에 생성하도록 선택할 수 있습니다.]]></value>
 		<value xml:lang="en"><![CDATA[You can choose to put the sitemap in the root path if you installed XE in a subdirectory.]]></value>
 	</item>
+	<item name="cmd_sitemaplite_open_url">
+		<value xml:lang="ko"><![CDATA[열기]]></value>
+		<value xml:lang="en"><![CDATA[Open]]></value>
+	</item>
 	<item name="cmd_sitemaplite_not_writable">
 		<value xml:lang="ko"><![CDATA[쓰기 권한 없음]]></value>
 		<value xml:lang="en"><![CDATA[Not Writable]]></value>

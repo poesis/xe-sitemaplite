@@ -27,16 +27,20 @@
 		<div class="x_control-group">
 			<label class="x_control-label">{$lang->cmd_sitemaplite_path}</label>
 			<div class="x_controls">
-				<label>
+				<label class="x_inline">
 					<input name="sitemaplite_file_path" type="radio" value="root" checked="checked"|cond="$sitemaplite_config->sitemap_file_path === 'root'" />
 					{htmlspecialchars($sitemaplite_url_root)}
-					<span class="not_writable" cond="!$sitemaplite_path_root_writable">({$lang->cmd_sitemaplite_not_writable})</span>
 				</label>
-				<label cond="$sitemaplite_path_root !== $sitemaplite_path_sub">
+				<span class="not_writable" cond="!$sitemaplite_path_root_writable">({$lang->cmd_sitemaplite_not_writable})</span>
+				<a class="preview_xml" href="{htmlspecialchars($sitemaplite_url_root)}" target="_blank">({$lang->cmd_sitemaplite_open_url})</a>
+				<br />
+				<label class="x_inline" cond="$sitemaplite_path_root !== $sitemaplite_path_sub">
 					<input name="sitemaplite_file_path" type="radio" value="sub" checked="checked"|cond="$sitemaplite_config->sitemap_file_path === 'sub'" />
 					{htmlspecialchars($sitemaplite_url_sub)}
-					<span class="not_writable" cond="!$sitemaplite_path_sub_writable">({$lang->cmd_sitemaplite_not_writable})</span>
 				</label>
+				<span class="not_writable" cond="!$sitemaplite_path_sub_writable">({$lang->cmd_sitemaplite_not_writable})</span>
+				<a class="preview_xml" href="{htmlspecialchars($sitemaplite_url_sub)}" target="_blank">({$lang->cmd_sitemaplite_open_url})</a>
+				<br />
 				<p class="x_help-block">{$lang->cmd_sitemaplite_about_path}</p>
 			</div>
 		</div>
