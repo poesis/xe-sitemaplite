@@ -157,7 +157,7 @@ class SitemapLiteAdminController extends SitemapLite
 		{
 			foreach ($config->additional_urls as $url)
 			{
-				$url = $this->_formatUrl($item->url);
+				$url = $this->_formatUrl($url);
 				if ($url !== false)
 				{
 					$urls[] = $url;
