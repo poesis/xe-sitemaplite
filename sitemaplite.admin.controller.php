@@ -146,6 +146,12 @@ class SitemapLiteAdminController extends SitemapLite
 			}
 		}
 		
+		// Insert URL for documents
+		if ($config->document_count && $config->document_source_modules)
+		{
+			$this->_addDocumentUrls($urls, $config);
+		}
+		
 		// Register additional URLs
 		if ($config->additional_urls)
 		{
@@ -255,6 +261,67 @@ class SitemapLiteAdminController extends SitemapLite
 		else
 		{
 			return true;
+		}
+	}
+	
+	/**
+	 * Add document URLs
+	 */
+	protected function _addDocumentUrls(&$urls, $config)
+	{
+		$baseurl = rtrim(Context::getDefaultUrl(), '\\/') . '/';
+		$rewrite = Context::isAllowRewrite();
+		
+		switch ($config->document_order)
+		{
+			case 'view': $sort_index = 'readed_count'; break;
+			case 'vote': $sort_index = 'voted_count'; break;
+			case 'recent': default: $sort_index = 'regdate'; break;
+		}
+		
+		$args = new stdClass;
+		$args->module_srl = $config->document_source_modules;
+		$args->list_count = $config->document_count;
+		$args->sort_index = $sort_index;
+		$args->status = 'PUBLIC';
+		$output = executeQuery('sitemaplite.getDocumentList', $args);
+		$midmap = array();
+		
+		if ($documents = $output->data)
+		{
+			$args = new stdClass;
+			$args->module_srl = $config->document_source_modules;
+			$output = executeQuery('sitemaplite.getModuleList', $args);
+			foreach ($output->data as $module)
+			{
+				$midmap[intval($module->module_srl)] = $module->mid;
+			}
+			
+			foreach ($documents as $document)
+			{
+				if (isset($midmap[$document->module_srl]))
+				{
+					if ($rewrite)
+					{
+						$urls[] = $baseurl . $midmap[$document->module_srl] . '/' . $document->document_srl;
+					}
+					else
+					{
+						$urls[] = $baseurl . 'index.php?mid=' . $midmap[$document->module_srl] . '&document_srl=' . $document->document_srl;
+					}
+				}
+				else
+				{
+					if ($rewrite)
+					{
+						$urls[] = $baseurl . $document->document_srl;
+					}
+					else
+					{
+						$urls[] = $baseurl . 'index.php?document_srl=' . $document->document_srl;
+					}
+				}
+			}
 		}
 	}
 	
