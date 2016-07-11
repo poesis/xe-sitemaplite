@@ -13,17 +13,20 @@ class SitemapLiteAdminController extends SitemapLite
 	 */
 	public function procSitemapliteAdminInsertConfig()
 	{
+		// Get current config and request vars
 		$config = $this->getConfig();
 		$vars = Context::getRequestVars();
 		
-		$menu_srls = $vars->sitemaplite_menu_srls;
-		$config->menu_srls = is_array($menu_srls) ? $menu_srls : array();
-		
+		// Load general config
 		$file_path = $vars->sitemaplite_file_path;
 		$config->sitemap_file_path = ($file_path === 'root') ? 'root' : 'sub';
 		
 		$ping_search_engines = $vars->sitemaplite_ping_search_engines;
 		$config->ping_search_engines = is_array($ping_search_engines) ? $ping_search_engines : array();
+		
+		// Load menu config
+		$menu_srls = $vars->sitemaplite_menu_srls;
+		$config->menu_srls = is_array($menu_srls) ? $menu_srls : array();
 		
 		$only_public_menus = $vars->sitemaplite_only_public_menus;
 		$config->only_public_menus = ($only_public_menus === 'Y') ? true : false;
@@ -39,6 +42,7 @@ class SitemapLiteAdminController extends SitemapLite
 			}
 		}
 		
+		// Load document config
 		$config->document_count = intval($vars->sitemaplite_document_count);
 		if ($config->document_count < 0)
 		{
@@ -68,9 +72,11 @@ class SitemapLiteAdminController extends SitemapLite
 			$config->document_interval = 'daily';
 		}
 		
+		// Save new config
 		$oModuleController = getController('module');
 		$output = $oModuleController->insertModuleConfig('sitemaplite', $config);
 		
+		// Try to write new sitemap.xml file
 		if ($output->toBool())
 		{
 			$write_success = $this->writeSitemapXml($config);
@@ -88,6 +94,7 @@ class SitemapLiteAdminController extends SitemapLite
 			return $output;
 		}
 		
+		// Redirect back to config page
 		if (Context::get('success_return_url'))
 		{
 			$this->setRedirectUrl(Context::get('success_return_url'));
