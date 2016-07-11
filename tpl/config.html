@@ -76,6 +76,21 @@
 		</div>
 	
 		<div class="x_control-group">
+			<label class="x_control-label">{$lang->cmd_sitemaplite_only_public_menus}</label>
+			<div class="x_controls">
+				<label class="x_inline">
+					<input name="sitemaplite_only_public_menus" type="radio" value="Y" checked="checked"|cond="$sitemaplite_config->only_public_menus !== false" />
+					{$lang->cmd_yes}
+				</label>
+				<label class="x_inline">
+					<input name="sitemaplite_only_public_menus" type="radio" value="N" checked="checked"|cond="$sitemaplite_config->only_public_menus === false" />
+					{$lang->cmd_no}
+				</label>
+				<p class="x_help-block">{$lang->cmd_sitemaplite_about_only_public_menus}</p>
+			</div>
+		</div>
+	
+		<div class="x_control-group">
 			<label class="x_control-label" for="sitemaplite_additional_urls">{$lang->cmd_sitemaplite_additional_urls}</label>
 			<div class="x_controls">
 				<textarea class="additional_urls" name="sitemaplite_additional_urls" id="sitemaplite_additional_urls" rows="{min(16, count($sitemaplite_config->additional_urls) + 2)}">{htmlspecialchars(implode("\n", $sitemaplite_config->additional_urls))}</textarea>

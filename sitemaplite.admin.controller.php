@@ -25,6 +25,9 @@ class SitemapLiteAdminController extends SitemapLite
 		$ping_search_engines = $vars->sitemaplite_ping_search_engines;
 		$config->ping_search_engines = is_array($ping_search_engines) ? $ping_search_engines : array();
 		
+		$only_public_menus = $vars->sitemaplite_only_public_menus;
+		$config->only_public_menus = ($only_public_menus === 'Y') ? true : false;
+		
 		$config->additional_urls = array();
 		$additional_urls = explode("\n", $vars->sitemaplite_additional_urls);
 		foreach ($additional_urls as $additional_url)
@@ -97,6 +100,11 @@ class SitemapLiteAdminController extends SitemapLite
 			$menu_items = $oMenuAdminModel->getMenuItems($menu_srl);
 			foreach ($menu_items->data as $item)
 			{
+				if (intval($item->group_srls) !== 0 && $config->only_public_menus !== false)
+				{
+					continue;
+				}
+				
 				$url = null;
 				$item->url = trim($item->url);
 				

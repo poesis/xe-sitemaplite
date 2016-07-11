@@ -44,6 +44,14 @@
 		<value xml:lang="ko"><![CDATA[선택한 검색 엔진에 사이트맵을 자동 제출합니다. 네이버는 직접 제출하셔야 합니다.]]></value>
 		<value xml:lang="en"><![CDATA[The selected search engines will be automatically notified whenever the sitemap changes.]]></value>
 	</item>
+	<item name="cmd_sitemaplite_only_public_menus">
+		<value xml:lang="ko"><![CDATA[공개된 메뉴만 포함]]></value>
+		<value xml:lang="en"><![CDATA[Public Menus Only]]></value>
+	</item>
+	<item name="cmd_sitemaplite_about_only_public_menus">
+		<value xml:lang="ko"><![CDATA[로그인한 사용자만 접근할 수 있는 메뉴는 사이트맵에서 제외합니다.]]></value>
+		<value xml:lang="en"><![CDATA[Menus that are only accessible to members will be excluded from the sitemap.]]></value>
+	</item>
 	<item name="cmd_sitemaplite_additional_urls">
 		<value xml:lang="ko"><![CDATA[추가로 등록할 주소]]></value>
 		<value xml:lang="en"><![CDATA[Additional URLs]]></value>
