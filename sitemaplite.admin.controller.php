@@ -92,9 +92,6 @@ class SitemapLiteAdminController extends SitemapLite
 		
 		// Insert URL for each item in menu
 		$oMenuAdminModel = getAdminModel('menu');
-		$dui = parse_url(Context::getDefaultUrl());
-		$baseurl = rtrim(Context::getDefaultUrl(), '\\/') . '/';
-		$rewrite = Context::isAllowRewrite();
 		foreach ($config->menu_srls as $menu_srl)
 		{
 			$menu_items = $oMenuAdminModel->getMenuItems($menu_srl);
@@ -105,37 +102,8 @@ class SitemapLiteAdminController extends SitemapLite
 					continue;
 				}
 				
-				$url = null;
-				$item->url = trim($item->url);
-				
-				if (preg_match('@^(https?:)?//.+@', $item->url))
-				{
-					if ($this->_isInternalUrl($item->url) && ($item->url . '/' !== $baseurl))
-					{
-						$url = $item->url;
-					}
-				}
-				elseif (preg_match('@^/.*@', $item->url))
-				{
-					$url = $dui['scheme'] . '://' . $dui['host'] . ($dui['port'] ? (':' . $dui['port']) : '') . $item->url;
-				}
-				elseif (preg_match('@(?:^#|\.php\?)@', $item->url))
-				{
-					$url = $baseurl . $item->url;
-				}
-				elseif ($item->url)
-				{
-					if ($rewrite)
-					{
-						$url = $baseurl . $item->url;
-					}
-					else
-					{
-						$url = $baseurl . 'index.php?mid=' . $item->url;
-					}
-				}
-				
-				if ($url)
+				$url = $this->_formatUrl($item->url);
+				if ($url !== false && $this->_isAllowedUrl($url))
 				{
 					$urls[] = $url;
 				}
@@ -147,20 +115,23 @@ class SitemapLiteAdminController extends SitemapLite
 		{
 			foreach ($config->additional_urls as $url)
 			{
-				$urls[] = $url;
+				$url = $this->_formatUrl($item->url);
+				if ($url !== false)
+				{
+					$urls[] = $url;
+				}
 			}
 		}
 		
-		// Remove duplicate URLs and admin/member URLs
+		// Remove duplicate URLs
 		$urls = array_unique($urls);
-		$urls = array_filter($urls, array($this, _isAllowedUrl));
 		
 		// Write XML
 		$xml = '<' . '?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL;
 		$xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . PHP_EOL;
 		foreach ($urls as $url)
 		{
-			$xml .= "\t" . $this->_writeUrl($url) . PHP_EOL;
+			$xml .= "\t" . '<url><loc>' . htmlspecialchars($url, ENT_QUOTES, 'UTF-8', true) . '</loc></url>' . PHP_EOL;
 		}
 		$xml .= '</urlset>' . PHP_EOL;
 		FileHandler::writeFile($xml_path, $xml);
@@ -175,11 +146,51 @@ class SitemapLiteAdminController extends SitemapLite
 	}
 	
 	/**
-	 * Write a single URL
+	 * Format a URL
 	 */
-	protected function _writeUrl($url)
+	protected function _formatUrl($url)
 	{
-		return '<url><loc>' . htmlspecialchars($url, ENT_QUOTES, 'UTF-8', true) . '</loc></url>';
+		static $dui = null;
+		static $baseurl = null;
+		static $rewrite = null;
+		if ($dui === null)
+		{
+			$dui = parse_url(Context::getDefaultUrl());
+			$baseurl = rtrim(Context::getDefaultUrl(), '\\/') . '/';
+			$rewrite = Context::isAllowRewrite();
+		}
+		$url = trim($url);
+		
+		if (preg_match('@^(https?:)?//.+@', $url))
+		{
+			if ($this->_isInternalUrl($url) && ($url . '/' !== $baseurl))
+			{
+				return $url;
+			}
+		}
+		elseif (preg_match('@^/.*@', $url))
+		{
+			return $dui['scheme'] . '://' . $dui['host'] . ($dui['port'] ? (':' . $dui['port']) : '') . $url;
+		}
+		elseif (preg_match('@(?:^#|\.php\?)@', $url))
+		{
+			return $baseurl . $url;
+		}
+		elseif ($url)
+		{
+			if ($rewrite)
+			{
+				return $baseurl . $url;
+			}
+			else
+			{
+				return $baseurl . 'index.php?mid=' . $url;
+			}
+		}
+		else
+		{
+			return false;
+		}
 	}
 	
 	/**
