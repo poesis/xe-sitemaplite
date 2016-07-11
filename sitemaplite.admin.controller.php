@@ -297,6 +297,7 @@ class SitemapLiteAdminController extends SitemapLite
 		$args->sort_index = $sort_index;
 		$args->status = 'PUBLIC';
 		$output = executeQuery('sitemaplite.getDocumentList', $args);
+		$output->data = $output->data ? (is_array($output->data) ? $output->data : array($output->data)) : null;
 		$midmap = array();
 		
 		// If documents are found...
@@ -306,6 +307,7 @@ class SitemapLiteAdminController extends SitemapLite
 			$args = new stdClass;
 			$args->module_srl = $config->document_source_modules;
 			$output = executeQuery('sitemaplite.getModuleList', $args);
+			$output->data = $output->data ? (is_array($output->data) ? $output->data : array($output->data)) : null;
 			foreach ($output->data as $module)
 			{
 				$midmap[intval($module->module_srl)] = $module->mid;
