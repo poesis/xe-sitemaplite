@@ -1,17 +1,17 @@
 <query id="getModuleList" action="select">
-    <tables>
-        <table name="modules" />
-    </tables>
-    <columns>
-        <column name="module_srl" />
+	<tables>
+		<table name="modules" />
+	</tables>
+	<columns>
+		<column name="module_srl" />
 		<column name="mid" />
-        <column name="browser_title" />
-    </columns>
-    <conditions>
-        <condition operation="in" column="module" var="module" />
+		<column name="browser_title" />
+	</columns>
+	<conditions>
+		<condition operation="in" column="module" var="module" />
 		<condition operation="in" column="module_srl" var="module_srl" pipe="and" />
-    </conditions>
-    <navigation>
-        <index var="sort_index" default="browser_title" order="asc" />
-    </navigation>
+	</conditions>
+	<navigation>
+		<index var="sort_index" default="browser_title" order="asc" />
+	</navigation>
 </query>

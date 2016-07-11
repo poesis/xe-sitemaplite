@@ -1,17 +1,17 @@
 <query id="getDocumentList" action="select">
-    <tables>
-        <table name="documents" />
-    </tables>
-    <columns>
+	<tables>
+		<table name="documents" />
+	</tables>
+	<columns>
 		<column name="document_srl" />
-        <column name="module_srl" />
-    </columns>
-    <conditions>
-        <condition operation="in" column="module_srl" var="module_srl" notnull="notnull" />
+		<column name="module_srl" />
+	</columns>
+	<conditions>
+		<condition operation="in" column="module_srl" var="module_srl" notnull="notnull" />
 		<condition operation="in" column="status" var="status" pipe="and" />
-    </conditions>
-    <navigation>
-        <index var="sort_index" default="regdate" order="desc" />
-        <list_count var="list_count" default="20" />
-    </navigation>
+	</conditions>
+	<navigation>
+		<index var="sort_index" default="regdate" order="desc" />
+		<list_count var="list_count" default="20" />
+	</navigation>
 </query>
