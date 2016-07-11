@@ -143,9 +143,9 @@ class SitemapLiteAdminController extends SitemapLite
 			}
 		}
 		
-		// Remove duplicate URLs and admin URLs
+		// Remove duplicate URLs and admin/member URLs
 		$urls = array_unique($urls);
-		$urls = array_filter($urls, array($this, _isNotAdminUrl));
+		$urls = array_filter($urls, array($this, _isAllowedUrl));
 		
 		// Write XML
 		$xml = '<' . '?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL;
@@ -189,11 +189,11 @@ class SitemapLiteAdminController extends SitemapLite
 	}
 	
 	/**
-	 * Check whether a URL is not an admin URL
+	 * Check whether a URL is allowed (block admin and member module URLs)
 	 */
-	protected function _isNotAdminUrl($url)
+	protected function _isAllowedUrl($url)
 	{
-		if (preg_match('@\b(?:admin|module=admin)\b@i', $url))
+		if (preg_match('@\b(?:admin|module=admin|act=(?:disp|proc)(?:member|socialxe)\w+)\b@i', $url))
 		{
 			return false;
 		}
