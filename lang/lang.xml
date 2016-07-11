@@ -28,8 +28,12 @@
 		<value xml:lang="ko"><![CDATA[sitemap.xml 파일을 기록할 수 없습니다. 퍼미션을 확인해 주십시오.]]></value>
 		<value xml:lang="en"><![CDATA[Cannot update sitemap.xml file. Please check permissions.]]></value>
 	</item>
+	<item name="cmd_sitemaplite_menus">
+		<value xml:lang="ko"><![CDATA[메뉴 포함]]></value>
+		<value xml:lang="en"><![CDATA[Include Menus]]></value>
+	</item>
 	<item name="cmd_sitemaplite_menu_srls">
-		<value xml:lang="ko"><![CDATA[사이트맵 메뉴 선택]]></value>
+		<value xml:lang="ko"><![CDATA[메뉴 선택]]></value>
 		<value xml:lang="en"><![CDATA[Select Menus]]></value>
 	</item>
 	<item name="cmd_sitemaplite_about_menu_srls">
@@ -45,19 +49,91 @@
 		<value xml:lang="en"><![CDATA[The selected search engines will be automatically notified whenever the sitemap changes.]]></value>
 	</item>
 	<item name="cmd_sitemaplite_only_public_menus">
-		<value xml:lang="ko"><![CDATA[공개된 메뉴만 포함]]></value>
-		<value xml:lang="en"><![CDATA[Public Menus Only]]></value>
+		<value xml:lang="ko"><![CDATA[비공개 메뉴 제외]]></value>
+		<value xml:lang="en"><![CDATA[Exclude Private Menus]]></value>
 	</item>
 	<item name="cmd_sitemaplite_about_only_public_menus">
 		<value xml:lang="ko"><![CDATA[로그인한 사용자만 접근할 수 있는 메뉴는 사이트맵에서 제외합니다.]]></value>
 		<value xml:lang="en"><![CDATA[Menus that are only accessible to members will be excluded from the sitemap.]]></value>
 	</item>
-	<item name="cmd_sitemaplite_additional_urls">
-		<value xml:lang="ko"><![CDATA[추가로 등록할 주소]]></value>
-		<value xml:lang="en"><![CDATA[Additional URLs]]></value>
-	</item>
 	<item name="cmd_sitemaplite_about_additional_urls">
 		<value xml:lang="ko"><![CDATA[메뉴에 포함된 주소 외에 추가로 등록할 주소가 있다면 한 줄에 하나씩 입력하여 주십시오.]]></value>
 		<value xml:lang="en"><![CDATA[If you have any other addresses to add, please write them one in each line.]]></value>
+	</item>
+	<item name="cmd_sitemaplite_documents">
+		<value xml:lang="ko"><![CDATA[문서 포함]]></value>
+		<value xml:lang="en"><![CDATA[Include Documents]]></value>
+	</item>
+	<item name="cmd_sitemaplite_document_count">
+		<value xml:lang="ko"><![CDATA[포함 갯수]]></value>
+		<value xml:lang="en"><![CDATA[Document Count]]></value>
+	</item>
+	<item name="cmd_sitemaplite_about_document_count">
+		<value xml:lang="ko"><![CDATA[일부 게시물을 사이트맵에 포함시킬 수 있습니다. 지나치게 많이 넣으면 서버에 무리가 됩니다.]]></value>
+		<value xml:lang="en"><![CDATA[You can include document links in the sitemap, but including too many will be a burden on the server.]]></value>
+	</item>
+	<item name="cmd_sitemaplite_document_source_modules">
+		<value xml:lang="ko"><![CDATA[추출 대상]]></value>
+		<value xml:lang="en"><![CDATA[Get Documents From]]></value>
+	</item>
+	<item name="cmd_sitemaplite_about_document_source_modules">
+		<value xml:lang="ko"><![CDATA[게시물을 가져올 모듈 목록입니다. 비공개 게시판은 제외하여 주십시오.]]></value>
+		<value xml:lang="en"><![CDATA[You can select modules from which to extract documents. Please don't include private boards.]]></value>
+	</item>
+	<item name="cmd_sitemaplite_document_order">
+		<value xml:lang="ko"><![CDATA[추출 기준]]></value>
+		<value xml:lang="en"><![CDATA[Sort Documents By]]></value>
+	</item>
+	<item name="cmd_sitemaplite_about_document_order">
+		<value xml:lang="ko"><![CDATA[사이트맵에 포함시킬 게시물을 선택하는 기준입니다. 사이트 특성에 따라 적절히 변경하시기 바랍니다.]]></value>
+		<value xml:lang="en"><![CDATA[You can customize the criterion for selecting which documents to include in the sitemap.]]></value>
+	</item>
+	<item name="cmd_sitemaplite_document_interval">
+		<value xml:lang="ko"><![CDATA[갱신 주기]]></value>
+		<value xml:lang="en"><![CDATA[Refresh Interval]]></value>
+	</item>
+	<item name="cmd_sitemaplite_about_document_interval">
+		<value xml:lang="ko"><![CDATA[게시물 목록을 갱신할 주기입니다. 너무 자주 갱신하면 서버에 무리가 됩니다.]]></value>
+		<value xml:lang="en"><![CDATA[You can customize the interval for refreshing the list of documents in the sitemap.]]></value>
+	</item>
+	<item name="cmd_sitemaplite_count">
+		<value xml:lang="ko"><![CDATA[건]]></value>
+		<value xml:lang="en"><![CDATA[documents]]></value>
+	</item>
+	<item name="cmd_sitemaplite_order_recent">
+		<value xml:lang="ko"><![CDATA[최근 게시물]]></value>
+		<value xml:lang="en"><![CDATA[Recent documents]]></value>
+	</item>
+	<item name="cmd_sitemaplite_order_view">
+		<value xml:lang="ko"><![CDATA[조회수 상위]]></value>
+		<value xml:lang="en"><![CDATA[Most viewed]]></value>
+	</item>
+	<item name="cmd_sitemaplite_order_vote">
+		<value xml:lang="ko"><![CDATA[추천수 상위]]></value>
+		<value xml:lang="en"><![CDATA[Most upvoted]]></value>
+	</item>
+	<item name="cmd_sitemaplite_additional_urls">
+		<value xml:lang="ko"><![CDATA[추가 등록할 주소]]></value>
+		<value xml:lang="en"><![CDATA[Additional URLs]]></value>
+	</item>
+	<item name="cmd_sitemaplite_interval_always">
+		<value xml:lang="ko"><![CDATA[항상]]></value>
+		<value xml:lang="en"><![CDATA[Always]]></value>
+	</item>
+	<item name="cmd_sitemaplite_interval_hourly">
+		<value xml:lang="ko"><![CDATA[매시간]]></value>
+		<value xml:lang="en"><![CDATA[Hourly]]></value>
+	</item>
+	<item name="cmd_sitemaplite_interval_daily">
+		<value xml:lang="ko"><![CDATA[매일]]></value>
+		<value xml:lang="en"><![CDATA[Daily]]></value>
+	</item>
+	<item name="cmd_sitemaplite_interval_weekly">
+		<value xml:lang="ko"><![CDATA[매주]]></value>
+		<value xml:lang="en"><![CDATA[Weekly]]></value>
+	</item>
+	<item name="cmd_sitemaplite_interval_monthly">
+		<value xml:lang="ko"><![CDATA[매달]]></value>
+		<value xml:lang="en"><![CDATA[Monthly]]></value>
 	</item>
 </lang>

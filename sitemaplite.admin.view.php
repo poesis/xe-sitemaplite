@@ -35,6 +35,12 @@ class SitemapLiteAdminView extends SitemapLite
 			$config->ping_search_engines = array();
 		}
 		
+		// Initialize the document source module list.
+		if (!isset($config->document_source_modules))
+		{
+			$config->document_source_modules = array();
+		}
+		
 		// Initialize the additional URL list.
 		if (!isset($config->additional_urls))
 		{
@@ -50,6 +56,7 @@ class SitemapLiteAdminView extends SitemapLite
 		Context::set('sitemaplite_path_sub_writable', $this->isWritable($this->getSitemapXmlPath('sub')));
 		Context::set('sitemaplite_path_writable', $path_writable);
 		Context::set('sitemaplite_index_menu_srl', $index_menu_srl);
+		Context::set('sitemaplite_module_list', $this->_getModuleList());
 		Context::set('sitemaplite_menus', getAdminModel('menu')->getMenus());
 		
 		$this->setTemplatePath($this->module_path . 'tpl');
@@ -73,6 +80,29 @@ class SitemapLiteAdminView extends SitemapLite
 		else
 		{
 			return $output->data->menu_srl;
+		}
+	}
+	
+	/**
+	 * Get the list of modules to extract documents from
+	 */
+	protected function _getModuleList()
+	{
+		$args = new stdClass;
+		$args->module = array('board', 'bodex', 'beluxe');
+		$output = executeQuery('sitemaplite.getModuleList', $args);
+		if ($output->data)
+		{
+			$result = array();
+			foreach ($output->data as $module)
+			{
+				$result[intval($module->module_srl)] = $module->browser_title;
+			}
+			return $result;
+		}
+		else
+		{
+			return array();
 		}
 	}
 }

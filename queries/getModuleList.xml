@@ -1,0 +1,15 @@
+<query id="getModuleList" action="select">
+    <tables>
+        <table name="modules" />
+    </tables>
+    <columns>
+        <column name="module_srl" />
+        <column name="browser_title" />
+    </columns>
+    <conditions>
+        <condition operation="in" column="module" var="module" notnull="notnull" />
+    </conditions>
+    <navigation>
+        <index var="sort_index" default="browser_title" order="asc" />
+    </navigation>
+</query>

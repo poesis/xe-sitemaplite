@@ -48,19 +48,6 @@
 		</div>
 	
 		<div class="x_control-group">
-			<label class="x_control-label">{$lang->cmd_sitemaplite_menu_srls}</label>
-			<div class="x_controls">
-				<!--@foreach($sitemaplite_menus as $sitemaplite_menu)-->
-					<label class="x_inline">
-						<input name="sitemaplite_menu_srls[]" type="checkbox" value="{$sitemaplite_menu->menu_srl}" checked="checked"|cond="in_array($sitemaplite_menu->menu_srl, $sitemaplite_config->menu_srls)" />
-						{$sitemaplite_menu->title}
-					</label>
-				<!--@end-->
-				<p class="x_help-block">{$lang->cmd_sitemaplite_about_menu_srls}</p>
-			</div>
-		</div>
-	
-		<div class="x_control-group">
 			<label class="x_control-label">{$lang->cmd_sitemaplite_ping_search_engines}</label>
 			<div class="x_controls">
 				<label class="x_inline">
@@ -72,6 +59,25 @@
 					Bing
 				</label>
 				<p class="x_help-block">{$lang->cmd_sitemaplite_about_ping_search_engines}</p>
+			</div>
+		</div>
+	
+	</section>
+	
+	<section>
+	
+		<h2>{$lang->cmd_sitemaplite_menus}</h2>
+		
+		<div class="x_control-group">
+			<label class="x_control-label">{$lang->cmd_sitemaplite_menu_srls}</label>
+			<div class="x_controls">
+				<!--@foreach($sitemaplite_menus as $sitemaplite_menu)-->
+					<label class="x_inline">
+						<input name="sitemaplite_menu_srls[]" type="checkbox" value="{$sitemaplite_menu->menu_srl}" checked="checked"|cond="in_array($sitemaplite_menu->menu_srl, $sitemaplite_config->menu_srls)" />
+						{$sitemaplite_menu->title}
+					</label>
+				<!--@end-->
+				<p class="x_help-block">{$lang->cmd_sitemaplite_about_menu_srls}</p>
 			</div>
 		</div>
 	
@@ -98,6 +104,82 @@
 			</div>
 		</div>
 	
+	</section>
+	
+	<section>
+	
+		<h2>{$lang->cmd_sitemaplite_documents}</h2>
+		
+		<div class="x_control-group">
+			<label class="x_control-label">{$lang->cmd_sitemaplite_document_count}</label>
+			<div class="x_controls">
+				<label class="x_inline">
+					<input name="sitemaplite_document_count" type="number" value="{intval($sitemaplite_config->document_count)}" />
+					{$lang->cmd_sitemaplite_count}
+				</label>
+				<p class="x_help-block">{$lang->cmd_sitemaplite_about_document_count}</p>
+			</div>
+		</div>
+	
+		<div class="x_control-group">
+			<label class="x_control-label">{$lang->cmd_sitemaplite_document_source_modules}</label>
+			<div class="x_controls">
+				<!--@foreach($sitemaplite_module_list as $_module_srl => $_module_title)-->
+					<label class="x_inline">
+						<input name="sitemaplite_document_source_modules[]" type="checkbox" value="{$_module_srl}" checked="checked"|cond="in_array($_module_srl, $sitemaplite_config->document_source_modules)" />
+						{$_module_title}
+					</label>
+				<!--@end-->
+				<p class="x_help-block">{$lang->cmd_sitemaplite_about_document_source_modules}</p>
+			</div>
+		</div>
+	
+		<div class="x_control-group">
+			<label class="x_control-label">{$lang->cmd_sitemaplite_document_order}</label>
+			<div class="x_controls">
+				<label class="x_inline">
+					<input name="sitemaplite_document_order" type="radio" value="recent" checked="checked"|cond="$sitemaplite_config->document_order === 'recent' || !$sitemaplite_config->document_order" />
+					{$lang->cmd_sitemaplite_order_recent}
+				</label>
+				<label class="x_inline">
+					<input name="sitemaplite_document_order" type="radio" value="view" checked="checked"|cond="$sitemaplite_config->document_order === 'view'" />
+					{$lang->cmd_sitemaplite_order_view}
+				</label>
+				<label class="x_inline">
+					<input name="sitemaplite_document_order" type="radio" value="vote" checked="checked"|cond="$sitemaplite_config->document_order === 'vote'" />
+					{$lang->cmd_sitemaplite_order_vote}
+				</label>
+				<p class="x_help-block">{$lang->cmd_sitemaplite_about_document_order}</p>
+			</div>
+		</div>
+	
+		<div class="x_control-group">
+			<label class="x_control-label">{$lang->cmd_sitemaplite_document_interval}</label>
+			<div class="x_controls">
+				<label class="x_inline">
+					<input name="sitemaplite_document_interval" type="radio" value="always" checked="checked"|cond="$sitemaplite_config->document_interval === 'always'" />
+					{$lang->cmd_sitemaplite_interval_always}
+				</label>
+				<label class="x_inline">
+					<input name="sitemaplite_document_interval" type="radio" value="hourly" checked="checked"|cond="$sitemaplite_config->document_interval === 'hourly'" />
+					{$lang->cmd_sitemaplite_interval_hourly}
+				</label>
+				<label class="x_inline">
+					<input name="sitemaplite_document_interval" type="radio" value="daily" checked="checked"|cond="$sitemaplite_config->document_interval === 'daily' || !$sitemaplite_config->document_interval" />
+					{$lang->cmd_sitemaplite_interval_daily}
+				</label>
+				<label class="x_inline">
+					<input name="sitemaplite_document_interval" type="radio" value="weekly" checked="checked"|cond="$sitemaplite_config->document_interval === 'weekly'" />
+					{$lang->cmd_sitemaplite_interval_weekly}
+				</label>
+				<label class="x_inline">
+					<input name="sitemaplite_document_interval" type="radio" value="monthly" checked="checked"|cond="$sitemaplite_config->document_interval === 'monthly'" />
+					{$lang->cmd_sitemaplite_interval_monthly}
+				</label>
+				<p class="x_help-block">{$lang->cmd_sitemaplite_about_document_interval}</p>
+			</div>
+		</div>
+		
 	</section>
 	
 	<div class="btnArea x_clearfix">

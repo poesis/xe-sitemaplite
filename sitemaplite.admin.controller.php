@@ -39,6 +39,35 @@ class SitemapLiteAdminController extends SitemapLite
 			}
 		}
 		
+		$config->document_count = intval($vars->sitemaplite_document_count);
+		if ($config->document_count < 0)
+		{
+			$config->document_count = 0;
+		}
+		if ($config->document_count > 1000)
+		{
+			$config->document_count = 1000;
+		}
+		
+		$config->document_source_modules = $vars->sitemaplite_document_source_modules;
+		if (!$config->document_source_modules)
+		{
+			$config->document_source_modules = array();
+		}
+		$config->document_source_modules = array_unique(array_map('intval', $config->document_source_modules));
+		
+		$config->document_order = $vars->sitemaplite_document_order;
+		if (!in_array($config->document_order, array('recent', 'view', 'vote')))
+		{
+			$config->document_order = 'recent';
+		}
+		
+		$config->document_interval = $vars->sitemaplite_document_interval;
+		if (!in_array($config->document_interval, array('always', 'hourly', 'daily', 'weekly', 'monthly')))
+		{
+			$config->document_interval = 'daily';
+		}
+		
 		$oModuleController = getController('module');
 		$output = $oModuleController->insertModuleConfig('sitemaplite', $config);
 		
