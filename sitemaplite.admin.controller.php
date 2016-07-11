@@ -192,6 +192,7 @@ class SitemapLiteAdminController extends SitemapLite
 	 */
 	protected function _formatUrl($url)
 	{
+		// Cache settings
 		static $dui = null;
 		static $baseurl = null;
 		static $rewrite = null;
@@ -201,8 +202,11 @@ class SitemapLiteAdminController extends SitemapLite
 			$baseurl = rtrim(Context::getDefaultUrl(), '\\/') . '/';
 			$rewrite = Context::isAllowRewrite();
 		}
+		
+		// Trim the URL
 		$url = trim($url);
 		
+		// External URL
 		if (preg_match('@^(https?:)?//.+@', $url))
 		{
 			if ($this->_isInternalUrl($url) && ($url . '/' !== $baseurl))
@@ -210,14 +214,20 @@ class SitemapLiteAdminController extends SitemapLite
 				return $url;
 			}
 		}
+		
+		// Absolute URL
 		elseif (preg_match('@^/.*@', $url))
 		{
 			return $dui['scheme'] . '://' . $dui['host'] . ($dui['port'] ? (':' . $dui['port']) : '') . $url;
 		}
+		
+		// Miscellaneous script URL
 		elseif (preg_match('@(?:^#|\.php\?)@', $url))
 		{
 			return $baseurl . $url;
 		}
+		
+		// Regular mid link
 		elseif ($url)
 		{
 			if ($rewrite)
@@ -229,10 +239,9 @@ class SitemapLiteAdminController extends SitemapLite
 				return $baseurl . 'index.php?mid=' . $url;
 			}
 		}
-		else
-		{
-			return false;
-		}
+		
+		// Not found
+		return false;
 	}
 	
 	/**
@@ -269,9 +278,11 @@ class SitemapLiteAdminController extends SitemapLite
 	 */
 	protected function _addDocumentUrls(&$urls, $config)
 	{
+		// Get settings
 		$baseurl = rtrim(Context::getDefaultUrl(), '\\/') . '/';
 		$rewrite = Context::isAllowRewrite();
 		
+		// Determine sort index
 		switch ($config->document_order)
 		{
 			case 'view': $sort_index = 'readed_count'; break;
@@ -279,6 +290,7 @@ class SitemapLiteAdminController extends SitemapLite
 			case 'recent': default: $sort_index = 'regdate'; break;
 		}
 		
+		// Get documents
 		$args = new stdClass;
 		$args->module_srl = $config->document_source_modules;
 		$args->list_count = $config->document_count;
@@ -287,8 +299,10 @@ class SitemapLiteAdminController extends SitemapLite
 		$output = executeQuery('sitemaplite.getDocumentList', $args);
 		$midmap = array();
 		
+		// If documents are found...
 		if ($documents = $output->data)
 		{
+			// Get conversion map (module_srl -> mid)
 			$args = new stdClass;
 			$args->module_srl = $config->document_source_modules;
 			$output = executeQuery('sitemaplite.getModuleList', $args);
@@ -297,6 +311,7 @@ class SitemapLiteAdminController extends SitemapLite
 				$midmap[intval($module->module_srl)] = $module->mid;
 			}
 			
+			// Add each document to the URL list
 			foreach ($documents as $document)
 			{
 				if (isset($midmap[$document->module_srl]))
