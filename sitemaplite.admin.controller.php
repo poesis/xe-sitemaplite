@@ -148,7 +148,8 @@ class SitemapLiteAdminController extends SitemapLite
 		$urls = array_filter($urls, array($this, _isNotAdminUrl));
 		
 		// Write XML
-		$xml = '<' . '?xml version="1.0"?>' . PHP_EOL . '<urlset>' . PHP_EOL;
+		$xml = '<' . '?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL;
+		$xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . PHP_EOL;
 		foreach ($urls as $url)
 		{
 			$xml .= "\t" . $this->_writeUrl($url) . PHP_EOL;
