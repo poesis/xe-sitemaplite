@@ -54,7 +54,9 @@ class SitemapLiteAdminView extends SitemapLite
 		Context::set('sitemaplite_url_sub', $this->getSitemapXmlUrl('sub'));
 		Context::set('sitemaplite_path_sub', $this->getSitemapXmlPath('sub'));
 		Context::set('sitemaplite_path_sub_writable', $this->isWritable($this->getSitemapXmlPath('sub')));
-		Context::set('sitemaplite_path_writable', $path_writable);
+		Context::set('sitemaplite_url_files', $this->getSitemapXmlUrl('files'));
+		Context::set('sitemaplite_path_files', $this->getSitemapXmlPath('files'));
+		Context::set('sitemaplite_path_files_writable', $this->isWritable($this->getSitemapXmlPath('files')));
 		Context::set('sitemaplite_index_menu_srl', $index_menu_srl);
 		Context::set('sitemaplite_module_list', $this->_getModuleList());
 		Context::set('sitemaplite_menus', getAdminModel('menu')->getMenus());

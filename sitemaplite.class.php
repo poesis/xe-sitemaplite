@@ -36,9 +36,13 @@ class SitemapLite extends ModuleObject
 		{
 			return str_replace('\\', '/', rtrim($_SERVER['DOCUMENT_ROOT'], '\\/')) . '/sitemap.xml';
 		}
-		else
+		elseif ($type === 'sub')
 		{
 			return str_replace('\\', '/', rtrim(_XE_PATH_, '\\/')) . '/sitemap.xml';
+		}
+		else
+		{
+			return str_replace('\\', '/', rtrim(_XE_PATH_, '\\/')) . '/files/sitemaplite/sitemap.xml';
 		}
 	}
 	
@@ -57,9 +61,13 @@ class SitemapLite extends ModuleObject
 			$dui = parse_url(Context::getDefaultUrl());
 			return $dui['scheme'] . '://' . $dui['host'] . ($dui['port'] ? (':' . $dui['port']) : '') . '/sitemap.xml';
 		}
-		else
+		elseif ($type === 'sub')
 		{
 			return rtrim(Context::getDefaultUrl(), '\\/') . '/sitemap.xml';
+		}
+		else
+		{
+			return rtrim(Context::getDefaultUrl(), '\\/') . '/files/sitemaplite/sitemap.xml';
 		}
 	}
 	
@@ -73,6 +81,10 @@ class SitemapLite extends ModuleObject
 			return true;
 		}
 		elseif (!@file_exists($filename) && @is_writable(dirname($filename)))
+		{
+			return true;
+		}
+		elseif (!@file_exists($filename) && !@file_exists(dirname($filename)) && @mkdir(dirname($filename), 0755, true))
 		{
 			return true;
 		}

@@ -19,7 +19,7 @@ class SitemapLiteAdminController extends SitemapLite
 		
 		// Load general config
 		$file_path = $vars->sitemaplite_file_path;
-		$config->sitemap_file_path = ($file_path === 'root') ? 'root' : 'sub';
+		$config->sitemap_file_path = in_array($file_path, array('root', 'sub', 'files')) ? $file_path : 'root';
 		
 		$ping_search_engines = $vars->sitemaplite_ping_search_engines;
 		$config->ping_search_engines = is_array($ping_search_engines) ? $ping_search_engines : array();

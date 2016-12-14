@@ -4,3 +4,5 @@ span.not_writable { color: red; display: inline-block; margin: 0 16px 0 -12px; }
 a.preview_xml { display: inline-block; margin-left: -12px; }
 textarea.additional_urls { width: 100% !important; box-sizing: border-box; }
 p.x_help-block { margin-top: 6px !important; margin-bottom: 2px !important; }
+p.hidden-unless-files { display: none; color: red !important; }
+p.hidden-unless-files code { color: red !important; }

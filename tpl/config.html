@@ -22,6 +22,10 @@
 		<p>{$lang->msg_sitemaplite_path_not_writable}</p>
 	</div>
 	
+	<div class="message error" cond="$sitemaplite_config->sitemap_file_path === 'files' && !$sitemaplite_path_files_writable">
+		<p>{$lang->msg_sitemaplite_path_not_writable}</p>
+	</div>
+	
 	<section class="section">
 
 		<div class="x_control-group">
@@ -43,7 +47,17 @@
 					<a class="preview_xml" href="{htmlspecialchars($sitemaplite_url_sub)}" target="_blank">({$lang->cmd_sitemaplite_open_url})</a>
 					<br />
 				</block>
+				<label class="x_inline">
+					<input name="sitemaplite_file_path" type="radio" value="files" checked="checked"|cond="$sitemaplite_config->sitemap_file_path === 'files'" />
+					{htmlspecialchars($sitemaplite_url_files)}
+				</label>
+				<span class="not_writable" cond="!$sitemaplite_path_files_writable">({$lang->cmd_sitemaplite_not_writable})</span>
+				<a class="preview_xml" href="{htmlspecialchars($sitemaplite_url_files)}" target="_blank">({$lang->cmd_sitemaplite_open_url})</a>
+				<br />
 				<p class="x_help-block">{$lang->cmd_sitemaplite_about_path}</p>
+				<p class="x_help-block hidden-unless-files">{$lang->cmd_sitemaplite_about_files_path}</p>
+				<p class="x_help-block hidden-unless-files">{$lang->cmd_sitemaplite_about_rewrite_rule}</p>
+				<p class="x_help-block hidden-unless-files">{$lang->cmd_sitemaplite_about_symbolic_link}</p>
 			</div>
 		</div>
 	
