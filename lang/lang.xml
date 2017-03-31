@@ -24,6 +24,18 @@
 		<value xml:lang="ko"><![CDATA[심볼릭 링크 생성을 위한 쉘 (SSH) 명령: <code>ln -s files/sitemaplite/sitemap.xml sitemap.xml</code>]]></value>
 		<value xml:lang="en"><![CDATA[Shell (SSH) command to create symbolic link: <code>ln -s files/sitemaplite/sitemap.xml sitemap.xml</code>]]></value>
 	</item>
+	<item name="cmd_sitemaplite_about_domains_path">
+		<value xml:lang="ko"><![CDATA[사이트맵 파일을 도메인마다 따로 생성하는 경우, 반드시 mod_rewrite 규칙을 사용하여 루트 디렉토리를 통해 접근할 수 있도록 해 주어야 합니다. 이를 따르지 않을 경우 검색 엔진에서 사이트맵 파일을 인식하지 못할 수도 있습니다.]]></value>
+		<value xml:lang="en"><![CDATA[If you create a sitemap file for each domain in a multi-domain site, you MUST use mod_rewrite rules to allow access via the root directory. Failure to follow this advice may cause search engines to disregard your sitemap file.]]></value>
+	</item>
+	<item name="cmd_sitemaplite_about_domains_rewrite_rule">
+		<value xml:lang="ko"><![CDATA[권장 mod_rewrite 규칙 (.htaccess에 추가): <code>RewriteRule ^sitemap\.xml$ ./files/sitemaplite/%{HTTP_HOST}/sitemap.xml [L]</code>]]></value>
+		<value xml:lang="en"><![CDATA[Recommended mod_rewrite rule (add to .htaccess file): <code>RewriteRule ^sitemap\.xml$ ./files/sitemaplite/%{HTTP_HOST}/sitemap.xml [L]</code>]]></value>
+	</item>
+	<item name="cmd_sitemaplite_domain">
+		<value xml:lang="ko"><![CDATA[<span class="domains">&lt;도메인&gt;</span>]]></value>
+		<value xml:lang="en"><![CDATA[<span class="domains">&lt;domain&gt;</span>]]></value>
+	</item>
 	<item name="cmd_sitemaplite_open_url">
 		<value xml:lang="ko"><![CDATA[열기]]></value>
 		<value xml:lang="en"><![CDATA[Open]]></value>
@@ -69,8 +81,8 @@
 		<value xml:lang="en"><![CDATA[Menus that are only accessible to members will be excluded from the sitemap.]]></value>
 	</item>
 	<item name="cmd_sitemaplite_about_additional_urls">
-		<value xml:lang="ko"><![CDATA[메뉴에 포함된 주소 외에 추가로 등록할 주소가 있다면 한 줄에 하나씩 입력하여 주십시오.]]></value>
-		<value xml:lang="en"><![CDATA[If you have any other addresses to add, please write them one in each line.]]></value>
+		<value xml:lang="ko"><![CDATA[메뉴에 포함된 주소 외에 추가로 등록할 주소가 있다면 한 줄에 하나씩 입력하여 주십시오.<br>다른 도메인의 주소는 등록할 수 없습니다.]]></value>
+		<value xml:lang="en"><![CDATA[If you have any other addresses to add, please write them one in each line.<br>Please note that addresses belonging to other domains will not be accepted.]]></value>
 	</item>
 	<item name="cmd_sitemaplite_documents">
 		<value xml:lang="ko"><![CDATA[문서 포함]]></value>

@@ -1,8 +1,11 @@
 input[type="number"] { width: 64px !important; }
 section h2 { padding-bottom: 4px; border-bottom: 1px solid #ddd; }
+span.domains { color: #f0a; }
 span.not_writable { color: red; display: inline-block; margin: 0 16px 0 -12px; }
 a.preview_xml { display: inline-block; margin-left: -12px; }
 textarea.additional_urls { width: 100% !important; box-sizing: border-box; }
 p.x_help-block { margin-top: 6px !important; margin-bottom: 2px !important; }
 p.hidden-unless-files { display: none; color: red !important; }
 p.hidden-unless-files code { color: red !important; }
+p.hidden-unless-domains { display: none; color: red !important; }
+p.hidden-unless-domains code { color: red !important; }

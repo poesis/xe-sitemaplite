@@ -25,7 +25,7 @@ class SitemapLite extends ModuleObject
 	/**
 	 * Get the sitemap.xml server-side path.
 	 */
-	public function getSitemapXmlPath($type = null)
+	public function getSitemapXmlPath($type = null, $domain = null)
 	{
 		if (!$type)
 		{
@@ -40,16 +40,21 @@ class SitemapLite extends ModuleObject
 		{
 			return str_replace('\\', '/', rtrim(_XE_PATH_, '\\/')) . '/sitemap.xml';
 		}
-		else
+		elseif ($type === 'files')
 		{
 			return str_replace('\\', '/', rtrim(_XE_PATH_, '\\/')) . '/files/sitemaplite/sitemap.xml';
+		}
+		elseif ($type === 'domains')
+		{
+			$domain = $domain ?: parse_url(Context::getDefaultUrl(), PHP_URL_HOST);
+			return str_replace('\\', '/', rtrim(_XE_PATH_, '\\/')) . '/files/sitemaplite/' . $domain . '/sitemap.xml';
 		}
 	}
 	
 	/**
 	 * Get the sitemap.xml file URL.
 	 */
-	public function getSitemapXmlUrl($type = null)
+	public function getSitemapXmlUrl($type = null, $domain = null)
 	{
 		if (!$type)
 		{
@@ -65,9 +70,14 @@ class SitemapLite extends ModuleObject
 		{
 			return rtrim(Context::getDefaultUrl(), '\\/') . '/sitemap.xml';
 		}
-		else
+		elseif ($type === 'files')
 		{
 			return rtrim(Context::getDefaultUrl(), '\\/') . '/files/sitemaplite/sitemap.xml';
+		}
+		elseif ($type === 'domains')
+		{
+			$domain = $domain ?: parse_url(Context::getDefaultUrl(), PHP_URL_HOST);
+			return rtrim(Context::getDefaultUrl(), '\\/') . '/files/sitemaplite/' . $domain . '/sitemap.xml';
 		}
 	}
 	

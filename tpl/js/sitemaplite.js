@@ -6,8 +6,13 @@
 			} else {
 				$("p.hidden-unless-files").hide();
 			}
+			if ($(this).val() === "domains" && $(this).is(":checked")) {
+				$("p.hidden-unless-domains").show();
+			} else {
+				$("p.hidden-unless-domains").hide();
+			}
 		}).each(function() {
-			if ($(this).val() === "files") {
+			if ($(this).val() === "files" || $(this).val() === "domains") {
 				$(this).triggerHandler("click");
 			}
 		});

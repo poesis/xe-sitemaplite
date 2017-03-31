@@ -19,7 +19,7 @@ class SitemapLiteAdminController extends SitemapLite
 		
 		// Load general config
 		$file_path = $vars->sitemaplite_file_path;
-		$config->sitemap_file_path = in_array($file_path, array('root', 'sub', 'files')) ? $file_path : 'root';
+		$config->sitemap_file_path = in_array($file_path, array('root', 'sub', 'files', 'domains')) ? $file_path : 'root';
 		
 		$ping_search_engines = $vars->sitemaplite_ping_search_engines;
 		$config->ping_search_engines = is_array($ping_search_engines) ? $ping_search_engines : array();
@@ -116,15 +116,26 @@ class SitemapLiteAdminController extends SitemapLite
 			$config = $this->getConfig();
 		}
 		
-		// Check XML path
-		$xml_path = $this->getSitemapXmlPath($config->sitemap_file_path);
-		if (!$this->isWritable($xml_path))
-		{
-			return false;
-		}
+		// Initialize domains and URLs
+		$domains = array();
+		$urls = array('rel:');
 		
-		// Insert default URL
-		$urls = array(rtrim(Context::getDefaultUrl(), '\\/') . '/');
+		// Get list of domains
+		$oModuleModel = getModel('module');
+		if ($config->sitemap_file_path === 'domains' && defined('RX_BASEDIR') && method_exists($oModuleModel, 'getAllDomains'))
+		{
+			$domains = array();
+			foreach ($oModuleModel->getAllDomains(100)->data as $domain_info)
+			{
+				$scheme = $domain_info->security === 'always' ? 'https://' : 'http://';
+				$port = $domain_info->security === 'always' ? $domain_info->https_port : $domain_info->http_port;
+				$domains[] = $scheme . $domain_info->domain . ($port ? sprintf(':%d', $port) : '') . RX_BASEURL;
+			}
+		}
+		else
+		{
+			$domains[] = rtrim(Context::getDefaultUrl(), '\\/') . '/';
+		}
 		
 		// Insert URL for each item in menu
 		$oMenuAdminModel = getAdminModel('menu');
@@ -139,7 +150,7 @@ class SitemapLiteAdminController extends SitemapLite
 				}
 				
 				$url = $this->_formatUrl($item->url);
-				if ($url !== false && $this->_isAllowedUrl($url))
+				if ($url !== false)
 				{
 					$urls[] = $url;
 				}
@@ -168,22 +179,65 @@ class SitemapLiteAdminController extends SitemapLite
 		// Remove duplicate URLs
 		$urls = array_unique($urls);
 		
-		// Write XML
-		$xml = '<' . '?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL;
-		$xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . PHP_EOL;
-		foreach ($urls as $url)
+		// Loop domains
+		foreach ($domains as $domain)
 		{
-			$xml .= "\t" . '<url><loc>' . htmlspecialchars($url, ENT_QUOTES, 'UTF-8', true) . '</loc></url>' . PHP_EOL;
+			// Examine domain info
+			$domain_info = parse_url($domain);
+			$absprefix = $domain_info['scheme'] . '://' . $domain_info['host'] . ($domain_info['port'] ? (':' . $domain_info['port']) : '');
+			
+			// Check XML path
+			$xml_path = $this->getSitemapXmlPath($config->sitemap_file_path, $domain_info['host']);
+			if (!$this->isWritable($xml_path))
+			{
+				return false;
+			}
+			
+			// Write XML
+			$xml = '<' . '?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL;
+			$xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . PHP_EOL;
+			foreach ($urls as $url)
+			{
+				list($url_type, $url_value) = explode(':', $url, 2);
+				switch ($url_type)
+				{
+					case 'url':
+						$url = $url_value;
+						break;
+					case 'pro':
+						$url = $domain_info['scheme'] . ':' . $url_value;
+						break;
+					case 'abs':
+						$url = $absprefix . $url_value;
+						break;
+					case 'rel':
+					default:
+						$url = $domain . $url_value;
+						break;
+				}
+				if ($this->_isInternalUrl($url, $absprefix))
+				{
+					$xml .= "\t" . '<url><loc>' . htmlspecialchars($url, ENT_QUOTES, 'UTF-8', true) . '</loc></url>' . PHP_EOL;
+				}
+			}
+			$xml .= '</urlset>' . PHP_EOL;
+			FileHandler::writeFile($xml_path, $xml);
+			
+			// Ping search engines
+			if ($config->ping_search_engines)
+			{
+				if ($config->sitemap_file_path === 'root' || $config->sitemap_file_path === 'sub')
+				{
+					$xml_url = $this->getSitemapXmlUrl($config->sitemap_file_path);
+				}
+				else
+				{
+					$xml_url = $domain . 'sitemap.xml';
+				}
+				$this->_pingSearchEngines($xml_url, $config->ping_search_engines);
+			}
 		}
-		$xml .= '</urlset>' . PHP_EOL;
-		FileHandler::writeFile($xml_path, $xml);
 		
-		// Ping search engines
-		if ($config->ping_search_engines)
-		{
-			$xml_url = $this->getSitemapXmlUrl($config->sitemap_file_path);
-			$this->_pingSearchEngines($xml_url, $config->ping_search_engines);
-		}
 		return true;
 	}
 	
@@ -193,13 +247,9 @@ class SitemapLiteAdminController extends SitemapLite
 	protected function _formatUrl($url)
 	{
 		// Cache settings
-		static $dui = null;
-		static $baseurl = null;
 		static $rewrite = null;
-		if ($dui === null)
+		if ($rewrite === null)
 		{
-			$dui = parse_url(Context::getDefaultUrl());
-			$baseurl = rtrim(Context::getDefaultUrl(), '\\/') . '/';
 			$rewrite = Context::isAllowRewrite();
 		}
 		
@@ -207,24 +257,27 @@ class SitemapLiteAdminController extends SitemapLite
 		$url = trim($url);
 		
 		// External URL
-		if (preg_match('@^(https?:)?//.+@', $url))
+		if (preg_match('@^https?://.+@', $url))
 		{
-			if ($this->_isInternalUrl($url) && ($url . '/' !== $baseurl))
-			{
-				return $url;
-			}
+			return 'url:' . $url;
+		}
+		
+		// Protocol-relative URL
+		elseif (preg_match('@^//.*@', $url))
+		{
+			return 'pro:' . $url;
 		}
 		
 		// Absolute URL
 		elseif (preg_match('@^/.*@', $url))
 		{
-			return $dui['scheme'] . '://' . $dui['host'] . ($dui['port'] ? (':' . $dui['port']) : '') . $url;
+			return 'abs:' . $url;
 		}
 		
 		// Miscellaneous script URL
 		elseif (preg_match('@(?:^#|\.php\?)@', $url))
 		{
-			return $baseurl . $url;
+			return 'rel:' . $url;
 		}
 		
 		// Regular mid link
@@ -232,11 +285,11 @@ class SitemapLiteAdminController extends SitemapLite
 		{
 			if ($rewrite)
 			{
-				return $baseurl . $url;
+				return 'rel:' . $url;
 			}
 			else
 			{
-				return $baseurl . 'index.php?mid=' . $url;
+				return 'rel:' . 'index.php?mid=' . $url;
 			}
 		}
 		
@@ -247,15 +300,9 @@ class SitemapLiteAdminController extends SitemapLite
 	/**
 	 * Check whether a URL is internal
 	 */
-	protected function _isInternalUrl($url)
+	protected function _isInternalUrl($url, $domain)
 	{
-		static $regexp = null;
-		if ($regexp === null)
-		{
-			$dui = parse_url(Context::getDefaultUrl());
-			$regexp = '@^(https?:)?//' . preg_quote($dui['host'], '@') . '(:[0-9]+)?(/.*)?@';
-		}
-		return preg_match($regexp, $url) ? true : false;
+		return strncmp($url, $domain, strlen($domain)) === 0;
 	}
 	
 	/**
@@ -279,7 +326,6 @@ class SitemapLiteAdminController extends SitemapLite
 	protected function _addDocumentUrls(&$urls, $config)
 	{
 		// Get settings
-		$baseurl = rtrim(Context::getDefaultUrl(), '\\/') . '/';
 		$rewrite = Context::isAllowRewrite();
 		
 		// Determine sort index
@@ -320,22 +366,22 @@ class SitemapLiteAdminController extends SitemapLite
 				{
 					if ($rewrite)
 					{
-						$urls[] = $baseurl . $midmap[$document->module_srl] . '/' . $document->document_srl;
+						$urls[] = 'rel:' . $midmap[$document->module_srl] . '/' . $document->document_srl;
 					}
 					else
 					{
-						$urls[] = $baseurl . 'index.php?mid=' . $midmap[$document->module_srl] . '&document_srl=' . $document->document_srl;
+						$urls[] = 'rel:' . 'index.php?mid=' . $midmap[$document->module_srl] . '&document_srl=' . $document->document_srl;
 					}
 				}
 				else
 				{
 					if ($rewrite)
 					{
-						$urls[] = $baseurl . $document->document_srl;
+						$urls[] = 'rel:' . $document->document_srl;
 					}
 					else
 					{
-						$urls[] = $baseurl . 'index.php?document_srl=' . $document->document_srl;
+						$urls[] = 'rel:' . 'index.php?document_srl=' . $document->document_srl;
 					}
 				}
 			}
