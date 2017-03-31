@@ -48,9 +48,9 @@ class SitemapLiteAdminController extends SitemapLite
 		{
 			$config->document_count = 0;
 		}
-		if ($config->document_count > 1000)
+		if ($config->document_count > 48000)
 		{
-			$config->document_count = 1000;
+			$config->document_count = 48000;
 		}
 		
 		$config->document_source_modules = $vars->sitemaplite_document_source_modules;

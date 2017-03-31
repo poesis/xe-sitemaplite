@@ -121,8 +121,8 @@
 		<value xml:lang="en"><![CDATA[You can customize the interval for refreshing the list of documents in the sitemap.]]></value>
 	</item>
 	<item name="cmd_sitemaplite_count">
-		<value xml:lang="ko"><![CDATA[건 (최대 1000건)]]></value>
-		<value xml:lang="en"><![CDATA[documents (maximum 1000)]]></value>
+		<value xml:lang="ko"><![CDATA[건 (최대 48000건)]]></value>
+		<value xml:lang="en"><![CDATA[documents (maximum 48000)]]></value>
 	</item>
 	<item name="cmd_sitemaplite_order_recent">
 		<value xml:lang="ko"><![CDATA[최근 게시물]]></value>
