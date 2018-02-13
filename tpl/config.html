@@ -26,7 +26,7 @@
 		<p>{$lang->msg_sitemaplite_path_not_writable}</p>
 	</div>
 	
-	<div class="message error" cond="$sitemaplite_config->sitemap_file_path === 'domains' && !$sitemaplite_path_domains_writable">
+	<div class="message error" cond="$sitemaplite_config->sitemap_file_path === 'domains' && !$sitemaplite_path_domains_writable && defined('RX_VERSION')">
 		<p>{$lang->msg_sitemaplite_path_not_writable}</p>
 	</div>
 	
@@ -58,19 +58,23 @@
 				<span class="not_writable" cond="!$sitemaplite_path_files_writable">({$lang->cmd_sitemaplite_not_writable})</span>
 				<a class="preview_xml" href="{htmlspecialchars($sitemaplite_url_files)}" target="_blank">({$lang->cmd_sitemaplite_open_url})</a>
 				<br />
-				<label class="x_inline">
-					<input name="sitemaplite_file_path" type="radio" value="domains" checked="checked"|cond="$sitemaplite_config->sitemap_file_path === 'domains'" />
-					{preg_replace('@/[^/]+/sitemap\.xml$@', '/' . $lang->cmd_sitemaplite_domain . '/sitemap.xml', htmlspecialchars($sitemaplite_url_domains))}
-				</label>
-				<span class="not_writable" cond="!$sitemaplite_path_domains_writable">({$lang->cmd_sitemaplite_not_writable})</span>
-				<a class="preview_xml" href="{htmlspecialchars($sitemaplite_url_domains)}" target="_blank">({$lang->cmd_sitemaplite_open_url})</a>
-				<br />
+				<block cond="defined('RX_VERSION')">
+					<label class="x_inline">
+						<input name="sitemaplite_file_path" type="radio" value="domains" checked="checked"|cond="$sitemaplite_config->sitemap_file_path === 'domains'" />
+						{preg_replace('@/[^/]+/sitemap\.xml$@', '/' . $lang->cmd_sitemaplite_domain . '/sitemap.xml', htmlspecialchars($sitemaplite_url_domains))}
+					</label>
+					<span class="not_writable" cond="!$sitemaplite_path_domains_writable">({$lang->cmd_sitemaplite_not_writable})</span>
+					<a class="preview_xml" href="{htmlspecialchars($sitemaplite_url_domains)}" target="_blank">({$lang->cmd_sitemaplite_open_url})</a>
+					<br />
+				</block>
 				<p class="x_help-block">{$lang->cmd_sitemaplite_about_path}</p>
 				<p class="x_help-block hidden-unless-files">{$lang->cmd_sitemaplite_about_files_path}</p>
 				<p class="x_help-block hidden-unless-files">{$lang->cmd_sitemaplite_about_rewrite_rule}</p>
 				<p class="x_help-block hidden-unless-files">{$lang->cmd_sitemaplite_about_symbolic_link}</p>
-				<p class="x_help-block hidden-unless-domains">{$lang->cmd_sitemaplite_about_domains_path}</p>
-				<p class="x_help-block hidden-unless-domains">{$lang->cmd_sitemaplite_about_domains_rewrite_rule}</p>
+				<block cond="defined('RX_VERSION')">
+					<p class="x_help-block hidden-unless-domains">{$lang->cmd_sitemaplite_about_domains_path}</p>
+					<p class="x_help-block hidden-unless-domains">{$lang->cmd_sitemaplite_about_domains_rewrite_rule}</p>
+				</block>
 			</div>
 		</div>
 	
