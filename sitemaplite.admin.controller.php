@@ -86,7 +86,14 @@ class SitemapLiteAdminController extends SitemapLite
 			}
 			else
 			{
-				return new Object(-1, 'msg_sitemaplite_failed_to_write_xml_file');
+				if (class_exists('BaseObject'))
+				{
+					return new BaseObject(-1, 'msg_sitemaplite_failed_to_write_xml_file');
+				}
+				else
+				{
+					return new Object(-1, 'msg_sitemaplite_failed_to_write_xml_file');
+				}
 			}
 		}
 		else

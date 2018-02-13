@@ -134,7 +134,7 @@ class SitemapLite extends ModuleObject
 	public function moduleInstall()
 	{
 		$this->registerTriggers();
-		return new Object();
+		return class_exists('BaseObject') ? new BaseObject() : new Object();
 	}
 	
 	public function checkUpdate()
@@ -145,7 +145,7 @@ class SitemapLite extends ModuleObject
 	public function moduleUpdate()
 	{
 		$this->registerTriggers();
-		return new Object(0, 'success_updated');
+		return class_exists('BaseObject') ? new BaseObject(0, 'success_updated') : new Object(0, 'success_updated');
 	}
 	
 	public function recompileCache()

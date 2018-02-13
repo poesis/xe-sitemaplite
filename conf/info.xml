@@ -8,8 +8,8 @@
 	<description xml:lang="en">
 		Extract your site's menu structure and documents as sitemap.xml and submit it to search engines.
 	</description>
-	<version>1.1.1</version>
-	<date>2016-12-14</date>
+	<version>1.1.2</version>
+	<date>2018-02-13</date>
 	<author link="https://www.poesis.org">
 		<name xml:lang="ko">포에시스</name>
 		<name xml:lang="en">POESIS</name>
