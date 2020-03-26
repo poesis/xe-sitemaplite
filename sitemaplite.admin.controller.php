@@ -136,7 +136,8 @@ class SitemapLiteAdminController extends SitemapLite
 			{
 				$scheme = $domain_info->security === 'always' ? 'https://' : 'http://';
 				$port = $domain_info->security === 'always' ? $domain_info->https_port : $domain_info->http_port;
-				$domains[] = $scheme . $domain_info->domain . ($port ? sprintf(':%d', $port) : '') . RX_BASEURL;
+				$baseurl = $scheme . $domain_info->domain . ($port ? sprintf(':%d', $port) : '') . RX_BASEURL;
+				$domains[] = Rhymix\Framework\URL::encodeIdna($baseurl);
 			}
 		}
 		else
