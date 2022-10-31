@@ -67,7 +67,7 @@ class SitemapLiteAdminController extends SitemapLite
 		}
 		
 		$config->document_interval = $vars->sitemaplite_document_interval;
-		if (!in_array($config->document_interval, array('always', 'hourly', 'daily', 'weekly', 'monthly')))
+		if (!in_array($config->document_interval, array('always', 'hourly', 'daily', 'weekly', 'monthly', 'manual')))
 		{
 			$config->document_interval = 'daily';
 		}

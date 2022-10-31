@@ -207,6 +207,10 @@
 					<input name="sitemaplite_document_interval" type="radio" value="monthly" checked="checked"|cond="$sitemaplite_config->document_interval === 'monthly'" />
 					{$lang->cmd_sitemaplite_interval_monthly}
 				</label>
+				<label class="x_inline">
+					<input name="sitemaplite_document_interval" type="radio" value="manual" checked="checked"|cond="$sitemaplite_config->document_interval === 'manual'" />
+					{$lang->cmd_sitemaplite_interval_manual}
+				</label>
 				<p class="x_help-block">{$lang->cmd_sitemaplite_about_document_interval}</p>
 			</div>
 		</div>

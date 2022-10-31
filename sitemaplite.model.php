@@ -43,16 +43,17 @@ class SitemapLiteModel extends SitemapLite
 				{
 					switch ($config->document_interval)
 					{
-						case 'always': $timediff = 0; break;
+						case 'always': $timediff = 3; break;
 						case 'hourly': $timediff = 3600; break;
 						case 'daily': $timediff = 86400; break;
 						case 'weekly': $timediff = 86400 * 7; break;
 						case 'monthly': $timediff = 86400 * 30; break;
+						case 'manual': $timediff = -1; break;
 						default: $timediff = 86400; break;
 					}
 					
 					$xml_path = $this->getSitemapXmlPath($config->sitemap_file_path);
-					if (filemtime($xml_path) < time() - $timediff)
+					if ($timediff > 0 && filemtime($xml_path) < time() - $timediff)
 					{
 						@touch($xml_path);
 						getAdminController('sitemaplite')->writeSitemapXml($config);
