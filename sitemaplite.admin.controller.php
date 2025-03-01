@@ -16,21 +16,21 @@ class SitemapLiteAdminController extends SitemapLite
 		// Get current config and request vars
 		$config = $this->getConfig();
 		$vars = Context::getRequestVars();
-		
+
 		// Load general config
 		$file_path = $vars->sitemaplite_file_path;
 		$config->sitemap_file_path = in_array($file_path, array('root', 'sub', 'files', 'domains')) ? $file_path : 'root';
-		
+
 		$ping_search_engines = $vars->sitemaplite_ping_search_engines;
 		$config->ping_search_engines = is_array($ping_search_engines) ? $ping_search_engines : array();
-		
+
 		// Load menu config
 		$menu_srls = $vars->sitemaplite_menu_srls;
 		$config->menu_srls = is_array($menu_srls) ? $menu_srls : array();
-		
+
 		$only_public_menus = $vars->sitemaplite_only_public_menus;
 		$config->only_public_menus = ($only_public_menus === 'Y') ? true : false;
-		
+
 		$config->additional_urls = array();
 		$additional_urls = explode("\n", $vars->sitemaplite_additional_urls);
 		foreach ($additional_urls as $additional_url)
@@ -41,7 +41,7 @@ class SitemapLiteAdminController extends SitemapLite
 				$config->additional_urls[] = $additional_url;
 			}
 		}
-		
+
 		// Load document config
 		$config->document_count = intval($vars->sitemaplite_document_count);
 		if ($config->document_count < 0)
@@ -52,30 +52,30 @@ class SitemapLiteAdminController extends SitemapLite
 		{
 			$config->document_count = 48000;
 		}
-		
+
 		$config->document_source_modules = $vars->sitemaplite_document_source_modules;
 		if (!$config->document_source_modules)
 		{
 			$config->document_source_modules = array();
 		}
 		$config->document_source_modules = array_unique(array_map('intval', $config->document_source_modules));
-		
+
 		$config->document_order = $vars->sitemaplite_document_order;
 		if (!in_array($config->document_order, array('recent', 'view', 'vote')))
 		{
 			$config->document_order = 'recent';
 		}
-		
+
 		$config->document_interval = $vars->sitemaplite_document_interval;
 		if (!in_array($config->document_interval, array('always', 'hourly', 'daily', 'weekly', 'monthly', 'manual')))
 		{
 			$config->document_interval = 'daily';
 		}
-		
+
 		// Save new config
 		$oModuleController = getController('module');
 		$output = $oModuleController->insertModuleConfig('sitemaplite', $config);
-		
+
 		// Try to write new sitemap.xml file
 		if ($output->toBool())
 		{
@@ -100,7 +100,7 @@ class SitemapLiteAdminController extends SitemapLite
 		{
 			return $output;
 		}
-		
+
 		// Redirect back to config page
 		if (Context::get('success_return_url'))
 		{
@@ -111,7 +111,7 @@ class SitemapLiteAdminController extends SitemapLite
 			$this->setRedirectUrl(getNotEncodedUrl('', 'module', 'admin', 'act', 'dispSitemapliteAdminConfig'));
 		}
 	}
-	
+
 	/**
 	 * Write sitemap.xml
 	 */
@@ -122,11 +122,11 @@ class SitemapLiteAdminController extends SitemapLite
 		{
 			$config = $this->getConfig();
 		}
-		
+
 		// Initialize domains and URLs
 		$domains = array();
 		$urls = array('rel:');
-		
+
 		// Get list of domains
 		$oModuleModel = getModel('module');
 		if ($config->sitemap_file_path === 'domains' && defined('RX_BASEDIR') && method_exists($oModuleModel, 'getAllDomains'))
@@ -144,7 +144,7 @@ class SitemapLiteAdminController extends SitemapLite
 		{
 			$domains[] = rtrim(Context::getDefaultUrl(), '\\/') . '/';
 		}
-		
+
 		// Insert URL for each item in menu
 		$oMenuAdminModel = getAdminModel('menu');
 		foreach ($config->menu_srls as $menu_srl)
@@ -156,7 +156,7 @@ class SitemapLiteAdminController extends SitemapLite
 				{
 					continue;
 				}
-				
+
 				$url = $this->_formatUrl($item->url);
 				if ($url !== false)
 				{
@@ -164,13 +164,13 @@ class SitemapLiteAdminController extends SitemapLite
 				}
 			}
 		}
-		
+
 		// Insert URL for documents
 		if ($config->document_count && $config->document_source_modules)
 		{
 			$this->_addDocumentUrls($urls, $config);
 		}
-		
+
 		// Register additional URLs
 		if ($config->additional_urls)
 		{
@@ -183,24 +183,24 @@ class SitemapLiteAdminController extends SitemapLite
 				}
 			}
 		}
-		
+
 		// Remove duplicate URLs
 		$urls = array_unique($urls);
-		
+
 		// Loop domains
 		foreach ($domains as $domain)
 		{
 			// Examine domain info
 			$domain_info = parse_url($domain);
-			$absprefix = $domain_info['scheme'] . '://' . $domain_info['host'] . ($domain_info['port'] ? (':' . $domain_info['port']) : '');
-			
+			$absprefix = $domain_info['scheme'] . '://' . $domain_info['host'] . (empty($domain_info['port']) ? '' : (':' . $domain_info['port']));
+
 			// Check XML path
 			$xml_path = $this->getSitemapXmlPath($config->sitemap_file_path, $domain_info['host']);
 			if (!$this->isWritable($xml_path))
 			{
 				return false;
 			}
-			
+
 			// Write XML
 			$xml = '<' . '?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL;
 			$xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . PHP_EOL;
@@ -230,7 +230,7 @@ class SitemapLiteAdminController extends SitemapLite
 			}
 			$xml .= '</urlset>' . PHP_EOL;
 			FileHandler::writeFile($xml_path, $xml);
-			
+
 			// Ping search engines
 			if ($config->ping_search_engines)
 			{
@@ -245,10 +245,10 @@ class SitemapLiteAdminController extends SitemapLite
 				$this->_pingSearchEngines($xml_url, $config->ping_search_engines);
 			}
 		}
-		
+
 		return true;
 	}
-	
+
 	/**
 	 * Format a URL
 	 */
@@ -260,34 +260,34 @@ class SitemapLiteAdminController extends SitemapLite
 		{
 			$rewrite = Context::isAllowRewrite();
 		}
-		
+
 		// Trim the URL
 		$url = trim($url);
-		
+
 		// External URL
 		if (preg_match('@^https?://.+@', $url))
 		{
 			return 'url:' . $url;
 		}
-		
+
 		// Protocol-relative URL
 		elseif (preg_match('@^//.*@', $url))
 		{
 			return 'pro:' . $url;
 		}
-		
+
 		// Absolute URL
 		elseif (preg_match('@^/.*@', $url))
 		{
 			return 'abs:' . $url;
 		}
-		
+
 		// Miscellaneous script URL
 		elseif (preg_match('@(?:^#|\.php\?)@', $url))
 		{
 			return 'rel:' . $url;
 		}
-		
+
 		// Regular mid link
 		elseif ($url)
 		{
@@ -300,11 +300,11 @@ class SitemapLiteAdminController extends SitemapLite
 				return 'rel:' . 'index.php?mid=' . $url;
 			}
 		}
-		
+
 		// Not found
 		return false;
 	}
-	
+
 	/**
 	 * Check whether a URL is internal
 	 */
@@ -312,7 +312,7 @@ class SitemapLiteAdminController extends SitemapLite
 	{
 		return strncmp($url, $domain, strlen($domain)) === 0;
 	}
-	
+
 	/**
 	 * Check whether a URL is allowed (block admin and member module URLs)
 	 */
@@ -327,7 +327,7 @@ class SitemapLiteAdminController extends SitemapLite
 			return true;
 		}
 	}
-	
+
 	/**
 	 * Add document URLs
 	 */
@@ -335,7 +335,7 @@ class SitemapLiteAdminController extends SitemapLite
 	{
 		// Get settings
 		$rewrite = Context::isAllowRewrite();
-		
+
 		// Determine sort index
 		switch ($config->document_order)
 		{
@@ -343,7 +343,7 @@ class SitemapLiteAdminController extends SitemapLite
 			case 'vote': $sort_index = 'voted_count'; break;
 			case 'recent': default: $sort_index = 'regdate'; break;
 		}
-		
+
 		// Get documents
 		$args = new stdClass;
 		$args->module_srl = $config->document_source_modules;
@@ -353,7 +353,7 @@ class SitemapLiteAdminController extends SitemapLite
 		$output = executeQuery('sitemaplite.getDocumentList', $args);
 		$output->data = $output->data ? (is_array($output->data) ? $output->data : array($output->data)) : null;
 		$midmap = array();
-		
+
 		// If documents are found...
 		if ($documents = $output->data)
 		{
@@ -366,7 +366,7 @@ class SitemapLiteAdminController extends SitemapLite
 			{
 				$midmap[intval($module->module_srl)] = $module->mid;
 			}
-			
+
 			// Add each document to the URL list
 			foreach ($documents as $document)
 			{
@@ -395,7 +395,7 @@ class SitemapLiteAdminController extends SitemapLite
 			}
 		}
 	}
-	
+
 	/**
 	 * Ping search engines
 	 */
@@ -405,13 +405,13 @@ class SitemapLiteAdminController extends SitemapLite
 			'google' => 'http://www.google.com/webmasters/sitemaps/ping?sitemap=%s',
 			'bing' => 'http://www.bing.com/ping?sitemap=%s',
 		);
-		
+
 		$config = array('ssl_verify_host' => false);
 		if (extension_loaded('curl'))
 		{
 			$config['adapter'] = 'curl';
 		}
-		
+
 		if ($search_engines)
 		{
 			foreach ($search_engines as $search_engine)
