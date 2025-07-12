@@ -15,38 +15,38 @@ class SitemapLiteAdminView extends SitemapLite
 	{
 		// Get module config.
 		$config = $this->getConfig();
-		
+
 		// Automatically select the index menu if running this module for the first time.
 		$index_menu_srl = $this->_getIndexMenuSrl();
 		if (!isset($config->menu_srls) || !is_array($config->menu_srls))
 		{
 			$config->menu_srls = array($index_menu_srl);
 		}
-		
+
 		// Automatically select the sitemap file path.
 		if (!isset($config->sitemap_file_path))
 		{
 			$config->sitemap_file_path = 'root';
 		}
-		
+
 		// Initialize the search engine list.
 		if (!isset($config->ping_search_engines))
 		{
 			$config->ping_search_engines = array();
 		}
-		
+
 		// Initialize the document source module list.
 		if (!isset($config->document_source_modules))
 		{
 			$config->document_source_modules = array();
 		}
-		
+
 		// Initialize the additional URL list.
 		if (!isset($config->additional_urls))
 		{
 			$config->additional_urls = array();
 		}
-		
+
 		Context::set('sitemaplite_config', $config);
 		Context::set('sitemaplite_url_root', $this->getSitemapXmlUrl('root'));
 		Context::set('sitemaplite_path_root', $this->getSitemapXmlPath('root'));
@@ -63,11 +63,11 @@ class SitemapLiteAdminView extends SitemapLite
 		Context::set('sitemaplite_index_menu_srl', $index_menu_srl);
 		Context::set('sitemaplite_module_list', $this->_getModuleList());
 		Context::set('sitemaplite_menus', getAdminModel('menu')->getMenus());
-		
+
 		$this->setTemplatePath($this->module_path . 'tpl');
 		$this->setTemplateFile('config');
 	}
-	
+
 	/**
 	 * Get menu_srl of index module
 	 */
@@ -87,7 +87,7 @@ class SitemapLiteAdminView extends SitemapLite
 			return $output->data->menu_srl;
 		}
 	}
-	
+
 	/**
 	 * Get the list of modules to extract documents from
 	 */
@@ -95,7 +95,7 @@ class SitemapLiteAdminView extends SitemapLite
 	{
 		$args = new stdClass;
 		$args->module = array('board', 'bodex', 'beluxe');
-		$output = executeQuery('sitemaplite.getModuleList', $args);
+		$output = executeQueryArray('sitemaplite.getModuleList', $args);
 		if ($output->data)
 		{
 			$result = array();
