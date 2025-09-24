@@ -146,7 +146,11 @@ class SitemapLiteAdminController extends SitemapLite
 			$port = $domain->security === 'always' ? $domain->https_port : $domain->http_port;
 			$baseurl = $scheme . $domain->domain . ($port ? sprintf(':%d', $port) : '') . RX_BASEURL;
 			$domain->sitemaplite_prefix = Rhymix\Framework\URL::encodeIdna($baseurl);
-			$domains[] = $domain;
+
+			if ($config->sitemap_file_path === 'domains' || $domain->is_default_domain === 'Y')
+			{
+				$domains[] = $domain;
+			}
 		}
 
 		// Loop domains
