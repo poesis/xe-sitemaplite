@@ -47,7 +47,35 @@ class SitemapLiteAdminView extends SitemapLite
 			$config->additional_urls = array();
 		}
 
-		Context::set('sitemaplite_config', $config);
+		// Get the list of configured domains.
+		$domains = ModuleModel::getAllDomains(100)->data ?? [];
+		if (!isset($config->domains))
+		{
+			$config->domains = [];
+		}
+		foreach ($domains as $domain)
+		{
+			if (!isset($config->domains[$domain->domain_srl]))
+			{
+				$config->domains[$domain->domain_srl] = (object)[
+					'menu_srls' => $config->menu_srls ?? [],
+					'only_public_menus' => $config->only_public_menus ?? true,
+					'document_count' => $config->document_count ?? 100,
+					'document_source_modules' => $config->document_source_modules ?? [],
+					'document_order' => $config->document_order ?? 'recent',
+					'additional_urls' => $config->additional_urls ?? [],
+				];
+			}
+		}
+
+		// Juggle other settings.
+		if (!isset($config->refresh_interval))
+		{
+			$config->refresh_interval = $config->document_interval ?? 'daily';
+		}
+
+		Context::set('config', $config);
+		Context::set('domains', $domains);
 		Context::set('sitemaplite_url_root', $this->getSitemapXmlUrl('root'));
 		Context::set('sitemaplite_path_root', $this->getSitemapXmlPath('root'));
 		Context::set('sitemaplite_path_root_writable', $this->isWritable($this->getSitemapXmlPath('root')));

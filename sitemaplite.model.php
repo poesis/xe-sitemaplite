@@ -21,18 +21,18 @@ class SitemapLiteModel extends SitemapLite
 			'procMenuAdminUpdateItem' => true,
 			'procMenuAdminDeleteItem' => true,
 		);
-		
+
 		$document_target_actions = array(
 			'/^proc\w+(?:Insert|Update|Delete|Vote)Document$/' => true,
 		);
-		
+
 		// Update sitemap.xml if the menu has changed
 		if (isset($menu_target_actions[$trigger_obj->act]))
 		{
 			getAdminController('sitemaplite')->writeSitemapXml();
 			return;
 		}
-		
+
 		// Update sitemap.xml if documents have changed and the interval has passed
 		foreach ($document_target_actions as $regexp => $true)
 		{
@@ -41,7 +41,7 @@ class SitemapLiteModel extends SitemapLite
 				$config = $this->getConfig();
 				if ($config->document_count && $config->document_source_modules)
 				{
-					switch ($config->document_interval)
+					switch ($config->refresh_interval ?? $config->document_interval)
 					{
 						case 'always': $timediff = 3; break;
 						case 'hourly': $timediff = 3600; break;
@@ -51,7 +51,7 @@ class SitemapLiteModel extends SitemapLite
 						case 'manual': $timediff = -1; break;
 						default: $timediff = 86400; break;
 					}
-					
+
 					$xml_path = $this->getSitemapXmlPath($config->sitemap_file_path);
 					if ($timediff > 0 && filemtime($xml_path) < time() - $timediff)
 					{

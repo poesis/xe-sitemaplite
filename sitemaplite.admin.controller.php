@@ -17,60 +17,75 @@ class SitemapLiteAdminController extends SitemapLite
 		$config = $this->getConfig();
 		$vars = Context::getRequestVars();
 
-		// Load general config
+		// Sitemap path
 		$file_path = $vars->sitemaplite_file_path;
 		$config->sitemap_file_path = in_array($file_path, array('root', 'sub', 'files', 'domains')) ? $file_path : 'root';
+
+		// Load per-domain config
+		$config->domains = [];
+		$domains = ModuleModel::getAllDomains(100)->data ?? [];
+		foreach ($domains as $domain)
+		{
+			$config->domains[$domain->domain_srl] = new stdClass;
+
+			$menu_srls = $vars->sitemaplite_menu_srls[$domain->domain_srl] ?? [];
+			$menu_srls = is_array($menu_srls) ? array_values($menu_srls) : [];
+			$config->domains[$domain->domain_srl]->menu_srls = array_unique(array_map('intval', $menu_srls));
+
+			$only_public_menus = $vars->sitemaplite_only_public_menus[$domain->domain_srl] ?? 'Y';
+			$config->domains[$domain->domain_srl]->only_public_menus = ($only_public_menus === 'Y') ? true : false;
+
+			$document_source_modules = $vars->sitemaplite_document_source_modules[$domain->domain_srl] ?? [];
+			$document_source_modules = is_array($document_source_modules) ? array_values($document_source_modules) : [];
+			$config->domains[$domain->domain_srl]->document_source_modules = array_unique(array_map('intval', $document_source_modules));
+
+			$config->domains[$domain->domain_srl]->document_count = intval($vars->sitemaplite_document_count[$domain->domain_srl] ?? 100);
+			if ($config->domains[$domain->domain_srl]->document_count < 0)
+			{
+				$config->domains[$domain->domain_srl]->document_count = 0;
+			}
+			if ($config->domains[$domain->domain_srl]->document_count > 48000)
+			{
+				$config->domains[$domain->domain_srl]->document_count = 48000;
+			}
+
+			$config->domains[$domain->domain_srl]->document_order = $vars->sitemaplite_document_order[$domain->domain_srl] ?? 'recent';
+			if (!in_array($config->domains[$domain->domain_srl]->document_order, ['recent', 'view', 'vote']))
+			{
+				$config->domains[$domain->domain_srl]->document_order = 'recent';
+			}
+
+			$additional_urls = array();
+			$additional_urls = explode("\n", $vars->sitemaplite_additional_urls[$domain->domain_srl] ?? '');
+			$config->domains[$domain->domain_srl]->additional_urls = [];
+			foreach ($additional_urls as $additional_url)
+			{
+				$additional_url = trim($additional_url);
+				if ($additional_url)
+				{
+					$config->domains[$domain->domain_srl]->additional_urls[] = $additional_url;
+				}
+			}
+		}
+
+		// Refresh settings
+		$config->refresh_interval = $vars->sitemaplite_refresh_interval;
+		if (!in_array($config->refresh_interval, array('always', 'hourly', 'daily', 'weekly', 'monthly', 'manual')))
+		{
+			$config->refresh_interval = 'daily';
+		}
 
 		$ping_search_engines = $vars->sitemaplite_ping_search_engines;
 		$config->ping_search_engines = is_array($ping_search_engines) ? $ping_search_engines : array();
 
-		// Load menu config
-		$menu_srls = $vars->sitemaplite_menu_srls;
-		$config->menu_srls = is_array($menu_srls) ? $menu_srls : array();
-
-		$only_public_menus = $vars->sitemaplite_only_public_menus;
-		$config->only_public_menus = ($only_public_menus === 'Y') ? true : false;
-
-		$config->additional_urls = array();
-		$additional_urls = explode("\n", $vars->sitemaplite_additional_urls);
-		foreach ($additional_urls as $additional_url)
-		{
-			$additional_url = trim($additional_url);
-			if ($additional_url)
-			{
-				$config->additional_urls[] = $additional_url;
-			}
-		}
-
-		// Load document config
-		$config->document_count = intval($vars->sitemaplite_document_count);
-		if ($config->document_count < 0)
-		{
-			$config->document_count = 0;
-		}
-		if ($config->document_count > 48000)
-		{
-			$config->document_count = 48000;
-		}
-
-		$config->document_source_modules = $vars->sitemaplite_document_source_modules;
-		if (!$config->document_source_modules)
-		{
-			$config->document_source_modules = array();
-		}
-		$config->document_source_modules = array_unique(array_map('intval', $config->document_source_modules));
-
-		$config->document_order = $vars->sitemaplite_document_order;
-		if (!in_array($config->document_order, array('recent', 'view', 'vote')))
-		{
-			$config->document_order = 'recent';
-		}
-
-		$config->document_interval = $vars->sitemaplite_document_interval;
-		if (!in_array($config->document_interval, array('always', 'hourly', 'daily', 'weekly', 'monthly', 'manual')))
-		{
-			$config->document_interval = 'daily';
-		}
+		// Delete old config items
+		unset($config->menu_srls);
+		unset($config->only_public_menus);
+		unset($config->document_source_modules);
+		unset($config->document_count);
+		unset($config->document_order);
+		unset($config->additional_urls);
+		unset($config->document_interval);
 
 		// Save new config
 		$oModuleController = getController('module');
@@ -123,75 +138,71 @@ class SitemapLiteAdminController extends SitemapLite
 			$config = $this->getConfig();
 		}
 
-		// Initialize domains and URLs
-		$domains = array();
-		$urls = array('rel:');
-
 		// Get list of domains
-		$oModuleModel = getModel('module');
-		if ($config->sitemap_file_path === 'domains' && defined('RX_BASEDIR') && method_exists($oModuleModel, 'getAllDomains'))
+		$domains = array();
+		foreach (ModuleModel::getAllDomains(100)->data as $domain)
 		{
-			$domains = array();
-			foreach ($oModuleModel->getAllDomains(100)->data as $domain_info)
-			{
-				$scheme = $domain_info->security === 'always' ? 'https://' : 'http://';
-				$port = $domain_info->security === 'always' ? $domain_info->https_port : $domain_info->http_port;
-				$baseurl = $scheme . $domain_info->domain . ($port ? sprintf(':%d', $port) : '') . RX_BASEURL;
-				$domains[] = Rhymix\Framework\URL::encodeIdna($baseurl);
-			}
+			$scheme = $domain->security === 'always' ? 'https://' : 'http://';
+			$port = $domain->security === 'always' ? $domain->https_port : $domain->http_port;
+			$baseurl = $scheme . $domain->domain . ($port ? sprintf(':%d', $port) : '') . RX_BASEURL;
+			$domain->sitemaplite_prefix = Rhymix\Framework\URL::encodeIdna($baseurl);
+			$domains[] = $domain;
 		}
-		else
-		{
-			$domains[] = rtrim(Context::getDefaultUrl(), '\\/') . '/';
-		}
-
-		// Insert URL for each item in menu
-		$oMenuAdminModel = getAdminModel('menu');
-		foreach ($config->menu_srls as $menu_srl)
-		{
-			$menu_items = $oMenuAdminModel->getMenuItems($menu_srl);
-			foreach ($menu_items->data as $item)
-			{
-				if (intval($item->group_srls) !== 0 && $config->only_public_menus !== false)
-				{
-					continue;
-				}
-
-				$url = $this->_formatUrl($item->url);
-				if ($url !== false)
-				{
-					$urls[] = $url;
-				}
-			}
-		}
-
-		// Insert URL for documents
-		if ($config->document_count && $config->document_source_modules)
-		{
-			$this->_addDocumentUrls($urls, $config);
-		}
-
-		// Register additional URLs
-		if ($config->additional_urls)
-		{
-			foreach ($config->additional_urls as $url)
-			{
-				$url = $this->_formatUrl($url);
-				if ($url !== false)
-				{
-					$urls[] = $url;
-				}
-			}
-		}
-
-		// Remove duplicate URLs
-		$urls = array_unique($urls);
 
 		// Loop domains
 		foreach ($domains as $domain)
 		{
+			$domain_config = $config->domains[$domain->domain_srl] ?? $config;
+			$urls = array('rel:');
+
+			// Insert URL for each item in menu
+			$oMenuAdminModel = getAdminModel('menu');
+			foreach ($domain_config->menu_srls as $menu_srl)
+			{
+				$menu_items = $oMenuAdminModel->getMenuItems($menu_srl);
+				foreach ($menu_items->data as $item)
+				{
+					if (intval($item->group_srls) !== 0 && $config->only_public_menus !== false)
+					{
+						continue;
+					}
+					if (empty($item->url) || preg_match('/^#/', $item->url))
+					{
+						continue;
+					}
+
+					$url = $this->_formatUrl($item->url);
+					if ($url !== false)
+					{
+						$urls[] = $url;
+					}
+				}
+			}
+
+			// Insert URL for documents
+			if ($domain_config->document_count && $domain_config->document_source_modules)
+			{
+				$this->_addDocumentUrls($urls, $domain_config);
+			}
+
+			// Register additional URLs
+			if ($domain_config->additional_urls)
+			{
+				foreach ($domain_config->additional_urls as $url)
+				{
+					$url = $this->_formatUrl($url);
+					if ($url !== false)
+					{
+						$urls[] = $url;
+					}
+				}
+			}
+
+			// Remove duplicate URLs
+			$urls = array_unique($urls);
+
 			// Examine domain info
-			$domain_info = parse_url($domain);
+			$domain_info = parse_url($domain->sitemaplite_prefix);
 			$absprefix = $domain_info['scheme'] . '://' . $domain_info['host'] . (empty($domain_info['port']) ? '' : (':' . $domain_info['port']));
 
 			// Check XML path
@@ -202,7 +213,7 @@ class SitemapLiteAdminController extends SitemapLite
 			}
 
 			// Write XML
-			$xml = '<' . '?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL;
+			$xml = '<' . '?xml version="1.0" encoding="UTF-8"?' . '>' . PHP_EOL;
 			$xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . PHP_EOL;
 			foreach ($urls as $url)
 			{
@@ -220,12 +231,12 @@ class SitemapLiteAdminController extends SitemapLite
 						break;
 					case 'rel':
 					default:
-						$url = $domain . $url_value;
+						$url = $domain->sitemaplite_prefix . $url_value;
 						break;
 				}
 				if ($this->_isInternalUrl($url, $absprefix))
 				{
-					$xml .= "\t" . '<url><loc>' . htmlspecialchars($url, ENT_QUOTES, 'UTF-8', true) . '</loc></url>' . PHP_EOL;
+					$xml .= '<url><loc>' . htmlspecialchars($url, ENT_QUOTES, 'UTF-8', true) . '</loc></url>' . PHP_EOL;
 				}
 			}
 			$xml .= '</urlset>' . PHP_EOL;
@@ -240,7 +251,7 @@ class SitemapLiteAdminController extends SitemapLite
 				}
 				else
 				{
-					$xml_url = $domain . 'sitemap.xml';
+					$xml_url = $domain->sitemaplite_prefix . 'sitemap.xml';
 				}
 				$this->_pingSearchEngines($xml_url, $config->ping_search_engines);
 			}
@@ -346,8 +357,8 @@ class SitemapLiteAdminController extends SitemapLite
 
 		// Get documents
 		$args = new stdClass;
-		$args->module_srl = $config->document_source_modules;
-		$args->list_count = $config->document_count;
+		$args->module_srl = $config->document_source_modules ?? [];
+		$args->list_count = $config->document_count ?? 100;
 		$args->sort_index = $sort_index;
 		$args->status = 'PUBLIC';
 		$output = executeQuery('sitemaplite.getDocumentList', $args);
@@ -359,7 +370,7 @@ class SitemapLiteAdminController extends SitemapLite
 		{
 			// Get conversion map (module_srl -> mid)
 			$args = new stdClass;
-			$args->module_srl = $config->document_source_modules;
+			$args->module_srl = $config->document_source_modules ?? [];
 			$output = executeQuery('sitemaplite.getModuleList', $args);
 			$output->data = $output->data ? (is_array($output->data) ? $output->data : array($output->data)) : null;
 			foreach ($output->data as $module)

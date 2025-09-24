@@ -1,5 +1,6 @@
 (function($) {
 	$(function() {
+
 		$("input[name='sitemaplite_file_path']").on("click", function() {
 			if ($(this).val() === "files" && $(this).is(":checked")) {
 				$("p.hidden-unless-files").show();
@@ -16,5 +17,11 @@
 				$(this).triggerHandler("click");
 			}
 		});
+
+		$("#domain-select").on('change', function() {
+			var selected_domain = $(this).val();
+			$(".domain-options").hide().filter("#domain-options-" + selected_domain).show();
+		}).triggerHandler('change');
+
 	});
 })(jQuery);

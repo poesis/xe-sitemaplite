@@ -18,10 +18,10 @@ class SitemapLite extends ModuleObject
 		{
 			$config = new stdClass;
 		}
-		
+
 		return $config;
 	}
-	
+
 	/**
 	 * Get the sitemap.xml server-side path.
 	 */
@@ -31,7 +31,7 @@ class SitemapLite extends ModuleObject
 		{
 			$type = isset($this->getConfig()->sitemap_file_path) ? $this->getConfig()->sitemap_file_path : 'root';
 		}
-		
+
 		if ($type === 'root')
 		{
 			return str_replace('\\', '/', rtrim($_SERVER['DOCUMENT_ROOT'], '\\/')) . '/sitemap.xml';
@@ -50,7 +50,7 @@ class SitemapLite extends ModuleObject
 			return str_replace('\\', '/', rtrim(_XE_PATH_, '\\/')) . '/files/sitemaplite/' . $domain . '/sitemap.xml';
 		}
 	}
-	
+
 	/**
 	 * Get the sitemap.xml file URL.
 	 */
@@ -60,11 +60,11 @@ class SitemapLite extends ModuleObject
 		{
 			$type = isset($this->getConfig()->sitemap_file_path) ? $this->getConfig()->sitemap_file_path : 'root';
 		}
-		
+
 		if ($type === 'root')
 		{
 			$dui = parse_url(Context::getDefaultUrl());
-			return $dui['scheme'] . '://' . $dui['host'] . ($dui['port'] ? (':' . $dui['port']) : '') . '/sitemap.xml';
+			return $dui['scheme'] . '://' . $dui['host'] . (!empty($dui['port']) ? (':' . $dui['port']) : '') . '/sitemap.xml';
 		}
 		elseif ($type === 'sub')
 		{
@@ -80,7 +80,7 @@ class SitemapLite extends ModuleObject
 			return rtrim(Context::getDefaultUrl(), '\\/') . '/files/sitemaplite/' . $domain . '/sitemap.xml';
 		}
 	}
-	
+
 	/**
 	 * Check if a file is writable.
 	 */
@@ -103,7 +103,7 @@ class SitemapLite extends ModuleObject
 			return false;
 		}
 	}
-	
+
 	/**
 	 * Check triggers.
 	 */
@@ -116,7 +116,7 @@ class SitemapLite extends ModuleObject
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Register triggers.
 	 */
@@ -130,24 +130,24 @@ class SitemapLite extends ModuleObject
 		}
 		return false;
 	}
-	
+
 	public function moduleInstall()
 	{
 		$this->registerTriggers();
 		return class_exists('BaseObject') ? new BaseObject() : new Object();
 	}
-	
+
 	public function checkUpdate()
 	{
 		return !$this->checkTriggers();
 	}
-	
+
 	public function moduleUpdate()
 	{
 		$this->registerTriggers();
 		return class_exists('BaseObject') ? new BaseObject(0, 'success_updated') : new Object(0, 'success_updated');
 	}
-	
+
 	public function recompileCache()
 	{
 		getAdminController('sitemaplite')->writeSitemapXml();

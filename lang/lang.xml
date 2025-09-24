@@ -9,8 +9,8 @@
 		<value xml:lang="en"><![CDATA[Sitemap File Path]]></value>
 	</item>
 	<item name="cmd_sitemaplite_about_path">
-		<value xml:lang="ko"><![CDATA[사이트맵 파일은 루트 디렉토리에 생성하는 것이 가장 좋습니다. 퍼미션 문제나 다른 CMS와의 충돌 등의 이유로 루트 디렉토리를 사용할 수 없는 경우에는 심볼릭 링크나 mod_rewrite 규칙을 사용하여 루트 디렉토리를 통해 접근할 수 있도록 해 주어야 합니다.]]></value>
-		<value xml:lang="en"><![CDATA[It is recommended that you place the sitemap file in the root directory of your website. If you cannot do so due to missing permissions or conflict with another CMS, please use a symbolic link or mod_rewrite rules to allow access via the root directory.]]></value>
+		<value xml:lang="ko"><![CDATA[도메인이 1개인 경우, 사이트맵 파일은 루트 디렉토리에 생성하는 것이 가장 좋습니다.<br>퍼미션 문제나 다른 CMS와의 충돌 등의 이유로 루트 디렉토리를 사용할 수 없는 경우에는 심볼릭 링크나 mod_rewrite 규칙을 사용하여 루트 디렉토리를 통해 접근할 수 있도록 해 주어야 합니다.]]></value>
+		<value xml:lang="en"><![CDATA[It is recommended that you place the sitemap file in the root directory of your website if you only use 1 domain.<br>If you cannot do so due to missing permissions or conflict with another CMS, please use a symbolic link or mod_rewrite rules to allow access via the root directory.]]></value>
 	</item>
 	<item name="cmd_sitemaplite_about_files_path">
 		<value xml:lang="ko"><![CDATA[사이트맵 파일을 files 폴더 내에 생성하는 경우, 반드시 심볼릭 링크나 mod_rewrite 규칙을 사용하여 루트 디렉토리를 통해 접근할 수 있도록 해 주어야 합니다. 이를 따르지 않을 경우 검색 엔진에서 사이트맵 파일을 인식하지 못할 수도 있습니다.]]></value>
@@ -52,9 +52,13 @@
 		<value xml:lang="ko"><![CDATA[sitemap.xml 파일을 기록할 수 없습니다. 퍼미션을 확인해 주십시오.]]></value>
 		<value xml:lang="en"><![CDATA[Cannot update sitemap.xml file. Please check permissions.]]></value>
 	</item>
-	<item name="cmd_sitemaplite_menus">
-		<value xml:lang="ko"><![CDATA[메뉴 포함]]></value>
-		<value xml:lang="en"><![CDATA[Include Menus]]></value>
+	<item name="cmd_sitemaplite_includes">
+		<value xml:lang="ko"><![CDATA[포함할 메뉴와 게시물]]></value>
+		<value xml:lang="en"><![CDATA[Include Menus and Documents]]></value>
+	</item>
+	<item name="cmd_sitemaplite_domain_select">
+		<value xml:lang="ko"><![CDATA[도메인 선택]]></value>
+		<value xml:lang="en"><![CDATA[Select Domain]]></value>
 	</item>
 	<item name="cmd_sitemaplite_menu_srls">
 		<value xml:lang="ko"><![CDATA[메뉴 선택]]></value>
@@ -84,12 +88,8 @@
 		<value xml:lang="ko"><![CDATA[메뉴에 포함된 주소 외에 추가로 등록할 주소가 있다면 한 줄에 하나씩 입력하여 주십시오.<br>다른 도메인의 주소는 등록할 수 없습니다.]]></value>
 		<value xml:lang="en"><![CDATA[If you have any other addresses to add, please write them one in each line.<br>Please note that addresses belonging to other domains will not be accepted.]]></value>
 	</item>
-	<item name="cmd_sitemaplite_documents">
-		<value xml:lang="ko"><![CDATA[문서 포함]]></value>
-		<value xml:lang="en"><![CDATA[Include Documents]]></value>
-	</item>
 	<item name="cmd_sitemaplite_document_count">
-		<value xml:lang="ko"><![CDATA[포함 갯수]]></value>
+		<value xml:lang="ko"><![CDATA[문서 포함 갯수]]></value>
 		<value xml:lang="en"><![CDATA[Document Count]]></value>
 	</item>
 	<item name="cmd_sitemaplite_about_document_count">
@@ -112,11 +112,15 @@
 		<value xml:lang="ko"><![CDATA[사이트맵에 포함시킬 게시물을 선택하는 기준입니다. 사이트 특성에 따라 적절히 변경하시기 바랍니다.]]></value>
 		<value xml:lang="en"><![CDATA[You can customize the criterion for selecting which documents to include in the sitemap.]]></value>
 	</item>
-	<item name="cmd_sitemaplite_document_interval">
+	<item name="cmd_sitemaplite_refresh">
+		<value xml:lang="ko"><![CDATA[자동 갱신 설정]]></value>
+		<value xml:lang="en"><![CDATA[Automatic Refresh]]></value>
+	</item>
+	<item name="cmd_sitemaplite_refresh_interval">
 		<value xml:lang="ko"><![CDATA[갱신 주기]]></value>
 		<value xml:lang="en"><![CDATA[Refresh Interval]]></value>
 	</item>
-	<item name="cmd_sitemaplite_about_document_interval">
+	<item name="cmd_sitemaplite_about_refresh_interval">
 		<value xml:lang="ko"><![CDATA[게시물 목록을 갱신할 주기입니다. 너무 자주 갱신하면 서버에 무리가 됩니다.<br>수동 선택시 관리자가 모듈 설정을 저장할 때만 갱신됩니다.]]></value>
 		<value xml:lang="en"><![CDATA[You can customize the interval for refreshing the list of documents in the sitemap.]]></value>
 	</item>
