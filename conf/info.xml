@@ -3,13 +3,13 @@
 	<title xml:lang="ko">사이트맵 Lite</title>
 	<title xml:lang="en">Sitemap Lite</title>
 	<description xml:lang="ko">
-		메뉴 구조와 문서 목록을 sitemap.xml 파일로 만들어 검색엔진에 등록하는 모듈입니다.
+		메뉴 구조와 문서 목록을 sitemap.xml 파일로 만들어 검색엔진에 제출할 수 있도록 도와주는 모듈입니다.
 	</description>
 	<description xml:lang="en">
-		Extract your site's menu structure and documents as sitemap.xml and submit it to search engines.
+		Extract your site's menu structure and documents to a sitemap.xml file that you can submit to search engines.
 	</description>
-	<version>1.3.0</version>
-	<date>2026-05-31</date>
+	<version>1.3.1</version>
+	<date>2026-06-04</date>
 	<author link="https://www.poesis.dev" email_address="kijin@poesis.dev">
 		<name xml:lang="ko">POESIS</name>
 		<name xml:lang="en">POESIS</name>
