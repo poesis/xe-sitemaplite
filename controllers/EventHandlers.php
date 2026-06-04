@@ -43,7 +43,21 @@ class EventHandlers extends Base
 		{
 			if (preg_match($regexp, $trigger_obj->act))
 			{
+				$do_reresh = false;
 				if (!empty($config->document_count) && !empty($config->document_source_modules))
+				{
+					$do_reresh = true;
+				}
+				foreach ($config->domains ?? [] as $domain)
+				{
+					if (!empty($domain->document_count) && !empty($domain->document_source_modules))
+					{
+						$do_reresh = true;
+						break;
+					}
+				}
+
+				if ($do_reresh)
 				{
 					switch ($config->refresh_interval ?? $config->document_interval)
 					{
@@ -63,6 +77,8 @@ class EventHandlers extends Base
 						SitemapModel::updateSitemap($config);
 					}
 				}
+
+				break;
 			}
 		}
 	}
