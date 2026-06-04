@@ -256,14 +256,6 @@
 		<div class="x_control-group">
 			<label class="x_control-label">{{ $lang->cmd_sitemaplite_ping_search_engines }}</label>
 			<div class="x_controls">
-				<label class="x_inline">
-					<input name="sitemaplite_ping_search_engines[]" type="checkbox" value="google" @checked(in_array('google', $config->ping_search_engines)) />
-					Google
-				</label>
-				<label class="x_inline">
-					<input name="sitemaplite_ping_search_engines[]" type="checkbox" value="bing" @checked(in_array('bing', $config->ping_search_engines)) />
-					Bing
-				</label>
 				<p class="x_help-block">{{ $lang->cmd_sitemaplite_about_ping_search_engines }}</p>
 			</div>
 		</div>

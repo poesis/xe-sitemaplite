@@ -395,6 +395,8 @@ class Sitemap
 	 */
 	protected static function _pingSearchEngines(string $url, array $search_engines = []): void
 	{
+		// These APIs don't work anymore, so the following code is only kept for future reference.
+		/*
 		$pings = [
 			'google' => 'http://www.google.com/webmasters/sitemaps/ping?sitemap=%s',
 			'bing' => 'http://www.bing.com/ping?sitemap=%s',
@@ -408,5 +410,6 @@ class Sitemap
 				$request = HTTP::request($ping_url, 'GET', null, [], [], ['timeout' => 10]);
 			}
 		}
+		*/
 	}
 }
